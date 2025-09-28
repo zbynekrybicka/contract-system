@@ -1,0 +1,43 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# ---------- FRONTEND (Vite/React) ----------
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.eslintcache
+frontend/coverage/
+# env (nech jen example)
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# ---------- BACKEND (Symfony) ----------
+backend/vendor/
+backend/var/
+backend/public/build/
+backend/public/bundles/
+backend/.phpunit.result.cache
+backend/phpunit.xml            # pokud máš vlastní lokální; jinak nech jen phpunit.xml.dist
+
+# Symfony env – .env (šablona) nech v repu, ale lokální varianty ignoruj
+backend/.env.local
+backend/.env.*.local
+backend/.env.local.php
+
+# Symfony secrets – NIKDY necommituješ decrypt private key
+backend/config/secrets/*/*decrypt*.php
+
+# JWT klíče
+backend/config/jwt/*.pem
+
+# ---------- DOCKER / lokální data ----------
+deploy.env
+docker/.env
+**/dbdata/
+**/mysql-data/
+**/jwtkeys/
