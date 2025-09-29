@@ -1,0 +1,29 @@
+# docker-compose.dev.yml
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: contract_system
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports: ["3307:3306"]
+    command: >-
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes: [dbdata:/var/lib/mysql]
+
+  php:
+    image: php:8.2-apache
+    ports: ["8000:80"]
+    volumes: ["./backend:/var/www/html"]
+    depends_on: [mysql]
+    # první start: a2enmod rewrite + DocumentRoot -> /public (udělá symfony/apache-pack)
+
+  adminer:
+    image: adminer
+    ports: ["8080:8080"]
+    environment: { ADMINER_DEFAULT_SERVER: mysql }
+    depends_on: [mysql]
+
+volumes: { dbdata: {} }
