@@ -11,3 +11,4 @@ WORKDIR /var/www/html
 COPY . /var/www/html
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 RUN composer install
+RUN cp .env.example .env.local

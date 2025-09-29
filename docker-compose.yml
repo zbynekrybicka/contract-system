@@ -2,10 +2,10 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: mojeMilaJulinka
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: contract_system
-      MYSQL_USER: contractor
-      MYSQL_PASSWORD: mojeMilaJulinka
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
     ports:
       - "3307:3306"
     command: >
