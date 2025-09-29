@@ -6,13 +6,10 @@ services:
       MYSQL_DATABASE: contract_system
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppass
-    ports:
-      - "3307:3306"
-    command: >
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
-    volumes:
-      - dbdata:/var/lib/mysql
+    ports: ["3307:3306"]
+    command: >-
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   php:
     build: backend/
