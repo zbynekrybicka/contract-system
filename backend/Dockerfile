@@ -8,4 +8,6 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /et
  && printf "<Directory /var/www/html/public>\nAllowOverride All\nRequire all granted\n</Directory>\n" > /etc/apache2/conf-available/symfony.conf \
  && a2enconf symfony
 WORKDIR /var/www/html
+COPY . /var/www/html
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+RUN composer install
