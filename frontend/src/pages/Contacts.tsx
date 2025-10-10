@@ -5,8 +5,8 @@ export default function Contacts(){
   return (
     <div>
       <h2>Contacts</h2>
-      <button onClick={()=>createContact({name:'New', email:'new@example.com'})}>+ Add</button>
-      <ul>{data?.map(c=> <li key={c.id}>{c.name} — {c.email}</li>)}</ul>
+      <button onClick={() => createContact({name: 'New', email: 'new@example.com' })}>+ Add</button>
+      <ul>{data?.map(c => <li key={c.id}>{c.name} — {c.email}</li>)}</ul>
     </div>
   );
 }

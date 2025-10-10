@@ -1,19 +1,21 @@
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import Login from './pages/Login'; import Contacts from './pages/Contacts'; import Meetings from './pages/Meetings';
-import { useAppSelector } from './hooks';
+import { useAppDispatch, useAppSelector } from './hooks';
+import { logout } from './features/auth/authSlice';
 
-function Private({children}:{children:JSX.Element}) {
-  const token = useAppSelector(s=>s.auth.token);
-  return token ? children : <Navigate to="/login" replace />;
-}
 export default function App(){
-  return (
+  const token = useAppSelector(s => s.auth.token);
+  const dispatch = useAppDispatch();
+
+  return (!token ? <Login /> :
     <BrowserRouter>
-      <nav><Link to="/contacts">Contacts</Link> | <Link to="/meetings">Meetings</Link></nav>
+      <nav><Link to="/contacts">Contacts</Link> | <Link to="/meetings">Meetings</Link> | <a href="#" onClick={e => {
+        e.preventDefault()
+        dispatch(logout());
+      }}>Logout</a> </nav>
       <Routes>
-        <Route path="/login" element={<Login/>} />
-        <Route path="/contacts" element={<Private><Contacts/></Private>} />
-        <Route path="/meetings" element={<Private><Meetings/></Private>} />
+        <Route path="/contacts" element={<Contacts/>} />
+        <Route path="/meetings" element={<Meetings/>} />
         <Route path="*" element={<Navigate to="/contacts" replace />} />
       </Routes>
     </BrowserRouter>

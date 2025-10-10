@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\%EntityName%;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+class %EntityName%Repository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, %EntityName%::class);
+    }
+
+/*
+    public function findOne(int $id): ?array
+    {
+        $row = $this->db->executeQuery(
+            'SELECT * FROM %TableName% WHERE id = :id',
+            ['id' => $id],
+            ['id' => \PDO::PARAM_INT]
+        )->fetchAssociative();
+
+        return $row ?: null;
+    }
+*/
+
+/*
+    public function new%EntityName%(): %EntityName%
+    {
+        return new %EntityName%();
+    }
+*/
+
+/*
+    public function persist%EntityName%(%EntityName% $item)
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($item);
+        $entityManager->flush();
+    }
+*/
+
+/*
+    public function delete%EntityName%(%EntityName% $item)
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->remove($item);
+        $entityManager->flush();
+    }
+*/
+
+}

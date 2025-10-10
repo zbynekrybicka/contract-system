@@ -1,0 +1,55 @@
+<?php
+namespace App\Controller;
+
+// use App\Entity\%EntityName%;
+// use App\Repository\%EntityName%Repository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+
+#[Route('%rootRoute%')]
+class ContactController extends AbstractController
+{
+    public function __construct(private EntityManagerInterface $em) {}
+
+/*
+    #[Route('', methods: ['GET'])]
+    public function getAll(%EntityName%Repository $%entityName%repository): JsonResponse
+    {
+        $%entityName%List = $%entityName%repository->findAll();
+        return $this->json($%entityName%List);
+    }
+*/
+
+/*
+    #[Route('', methods: ['POST'])]
+    public function create(Request $request, %EntityName%Repository $%entityName%repository): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $%entityName% = $%entityName%repository->create($data);
+        $%entityName%repository->persist($%entityName%);
+        return $this->json(['id' => $$%entityName%->getId()], 201);
+    }
+*/
+
+/*
+    #[Route('/{id}', methods: ['PUT'])]
+    public function update(%EntityName% $%entityName%, %EntityName%Repository $%entityName%repository): JsonResponse
+    {
+
+        $%entityName%repository->persist($%entityName%);
+        return $this->json(null, 204);
+    }
+*/
+
+/*
+    #[Route('/{id}', methods: ['DELETE'])]
+    public function delete(%EntityName% $%entityName%, %EntityName%Repository $%entityName%repository): JsonResponse
+    {
+        $%entityName%repository->delete($%entityName%);
+        return $this->json(null, 204);
+    }
+*/
+}
