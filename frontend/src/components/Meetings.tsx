@@ -1,4 +1,4 @@
-import { useGetMeetingsQuery } from '../features/meetings/meetingsApi';
+import { useGetMeetingsQuery } from '../services/api/meetingsApi';
 
 export default function Meetings(){
   const { data } = useGetMeetingsQuery({});

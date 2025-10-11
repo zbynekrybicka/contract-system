@@ -1,9 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../features/auth/authSlice';
+import authReducer from './authSlice';
+import loginFormReducer from './loginFormSlice'
 import { api } from '../services/api';
 
 export const store = configureStore({
-  reducer: { auth: authReducer, [api.reducerPath]: api.reducer },
+  reducer: { 
+    /**
+     * Here register new reducers
+     */
+    auth: authReducer,
+    loginForm: loginFormReducer,
+
+    [api.reducerPath]: api.reducer 
+  },
   middleware: (gDM) => gDM().concat(api.middleware),
 });
 export type RootState = ReturnType<typeof store.getState>;

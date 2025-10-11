@@ -18,5 +18,5 @@ security:
       jwt: ~    # Lexik JWT authenticator
 
   access_control:
-    - { path: ^/auth/login$, roles: PUBLIC_ACCESS }   # login je veřejný
+    - { path: ^/login$, roles: PUBLIC_ACCESS }   # login je veřejný
     - { path: ^/, roles: IS_AUTHENTICATED_FULLY }     # vše ostatní vyžaduje token

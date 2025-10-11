@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import type { RootState } from '.';
 
 const saved = localStorage.getItem('token');
 
@@ -18,5 +19,7 @@ const slice = createSlice({
     }
   }
 });
-export const { setToken, logout } = slice.actions;
 export default slice.reducer;
+
+export const { setToken, logout } = slice.actions;
+export const getAuthToken = (s: RootState): string => s.auth.token ?? ""

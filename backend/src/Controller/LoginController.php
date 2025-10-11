@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,14 +19,12 @@ class LoginController extends AbstractController
      * 
      * @param Request $request, 
      * @param UserRepository $users, 
-     * @param UserPasswordHasherInterface $hasher, 
      * @param JWTTokenManagerInterface $jwtManager
      * @return JsonResponse
      */
     #[Route('/login', name: 'login', methods: ['POST'])]
     public function login(Request $request, 
-        UserRepository $users, 
-        UserPasswordHasherInterface $hasher, 
+        UserRepository $users,
         JWTTokenManagerInterface $jwtManager
     ): JsonResponse 
     {
@@ -46,7 +45,7 @@ class LoginController extends AbstractController
         $user = $users->findByEmail($email);
 
         // check password
-        $isPasswordCorrect = $this->passwordVerify($hasher, $user, $password);
+        $isPasswordCorrect = $this->passwordVerify($user, $password);
         if (!$isPasswordCorrect) {
             return $this->json(null, 401);
         }
@@ -70,8 +69,8 @@ class LoginController extends AbstractController
     {
         // set results of the conditions
         $isDataArray = is_array($data);
-        $isEmailEmpty = empty($data['email']);
-        $isPasswordEmpty = empty($data['password']);
+        $isEmailEmpty = strlen($data['email']) === 0;
+        $isPasswordEmpty = strlen($data['password']) === 0;
         
         // send result
         return $isDataArray && !$isEmailEmpty && !$isPasswordEmpty; 
@@ -82,11 +81,11 @@ class LoginController extends AbstractController
      * Verify if user exists and password is correct
      * 
      * @param UserPasswordHasherInterface $hasher
-     * @param UserEntity $user
+     * @param User $user
      * @param string $password
      * @return bool
      */
-    private function passwordVerify(UserPasswordHasherInterface $hasher, UserEntity $user, string $password): bool
+    private function passwordVerify(User $user, string $password): bool
     {
         // check valid user
         if (!$user) {
@@ -94,6 +93,6 @@ class LoginController extends AbstractController
         }
 
         // check valid password
-        return $hasher->isPasswordValid($user, $password);
+        return $user->verifyPassword($password);
     }
 }

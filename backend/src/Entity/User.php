@@ -4,10 +4,11 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-final class User
+final class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -74,6 +75,22 @@ final class User
     public function verifyPassword(string $password): bool
     {
         return password_verify($password, $this->password);
+    }
+
+
+    public function getRoles(): array
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return strval($this->getId());
     }
 
 }

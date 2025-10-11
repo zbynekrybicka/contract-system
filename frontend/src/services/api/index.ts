@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { RootState } from '../app/store';
+import type { RootState } from '../../store';
 
 export const api = createApi({
 
@@ -13,8 +13,5 @@ export const api = createApi({
       return headers;
     },
   }),
-
-  tagTypes: ['Contact','Meeting'],
-
   endpoints: () => ({}),
 });
