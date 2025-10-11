@@ -12,3 +12,11 @@ uses an EntityManager for access to the database and other layers (for example J
 The [entities](backend/src/Entity) are objects contain database rows. You can send or receive the entities across the layers. The entities are adapted for specific purposes. They not contain getters and setters for all attributes. However all entity methods have to have specific purpose and they have to be covered by a [test](backend/tests/Entity).
 
 ## FrontEnd
+
+The [frontend](frontend) is built with React + Redux. It includes React components, Redux reducers and API services. All layers are strictly spearated and each has a specific purpose.
+
+The [components](frontend/src/components) are visual structure of the application. Their purpose is to conditionally render of the DOM, nothing else. All application logic is separated and only used inside these templates.
+
+The [reducers](frontend/src/store) act as local data containers. They contain getters and setters for specific purposes and are covered by tests. They also contain data types for more complex data structures and these structures can be used in API services.
+
+The [API services](frontend/src/services/api) are a contact layer with REST API and contain predefined API requests for communication with backend.

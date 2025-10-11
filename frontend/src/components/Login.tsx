@@ -11,7 +11,7 @@ export default function Login() {
   const password = useAppSelector(getPassword)
 
   const handleLoginClick = () => login({ email, password })
-    .then(({data}) => dispatch(setToken(data)))
+    .then(({data}) => dispatch(setToken(data as string)))
 
   return (
     <form>
