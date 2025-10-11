@@ -15,5 +15,7 @@ export const store = configureStore({
   },
   middleware: (gDM) => gDM().concat(api.middleware),
 });
+
+export type Action<T> = { type: string, payload: T }
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

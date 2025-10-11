@@ -1,25 +1,59 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { RootState } from '.';
+import type { Action, RootState } from '.';
+
+export type LoginFormData = {
+  email: string;
+  password: string;
+}
 
 const slice = createSlice({
     name: "loginForm",
+
     initialState: { 
         email: "",
         password: ""
     },
 
     reducers: {
-        setEmail: (s, a) => {
-            s.email = a.payload as string
+
+        /**
+         * Set email in login form
+         * 
+         * @param state LoginFormData
+         * @param action Action
+         */
+        setEmail: (state: LoginFormData, action: Action<string>) => {
+            state.email = action.payload
         },
-        setPassword: (s, a) => {
-            s.password = a.payload as string
+        
+        /**
+         * Set password in login form
+         * 
+         * @param state LoginFormData
+         * @param action Action
+         */
+        setPassword: (state: LoginFormData, action: Action<string>) => {
+            state.password = action.payload
         }
     }
 })
 
-export default slice.reducer
+/**
+ * Email value from login form
+ * 
+ * @param state 
+ * @returns string
+ */
+export const getEmail = (state: RootState): string => state.loginForm.email ?? ""
 
+/**
+ * Password value from login form
+ * 
+ * @param state RootState
+ * @returns string
+ */
+export const getPassword = (state: RootState): string => state.loginForm.password ?? ""
+
+
+export default slice.reducer
 export const { setEmail, setPassword } = slice.actions
-export const getEmail = (s: RootState): string => s.loginForm.email ?? ""
-export const getPassword = (s: RootState): string => s.loginForm.password ?? ""
