@@ -4,7 +4,7 @@ The application is a demonstration of a clear full-stack architecture that inclu
 
 ## BackEnd
 
-The backend is built on a PHP/Symfony framework. It includes controllers, repositories and entities. The controllers accept REST API requests and use the repositories to process these requests.
+The [backend](tree/master/backend) is built on a PHP/Symfony framework. It includes controllers, repositories and entities. The controllers accept REST API requests and use the repositories to process these requests.
 
 The repositories have access to a MySQL database through a Doctrine layer and use the entities for data processing. Note: The repositories
 uses an EntityManager for access to the database and other layers (for example JWT). Only the repositories have access to these layers, not by the controllers.
