@@ -20,3 +20,25 @@ The [components](frontend/src/components) are visual structure of the applicatio
 The [reducers](frontend/src/store) act as local data containers. They contain getters and setters for specific purposes and are covered by tests. They also contain data types for more complex data structures and these structures can be used in API services.
 
 The [API services](frontend/src/services/api) are a contact layer with REST API and contain predefined API requests for communication with backend.
+
+## Working Directories
+
+### BackEnd
+
+- [Controllers](backend/src/Controller) - handles and processes of HTTP requests
+- [Repositories](backend/src/Repository) - manages access to the database and other data sources
+- [Entities](backend/src/Entity) - Doctrine entities for database migrations and data processing
+
+- [HTTP tests](backend/tests/http) - Acceptance tests calls fully process HTTP requests
+- [Repository tests](backend/tests/Repository) - Integration tests calls the server sources
+- [Entity tests](backend/tests/Entity) - Unit tests for checking entity methods
+
+### FrontEnd
+
+- [Components](frontend/src/components) - visual building blocks of the application
+- [Store](frontend/src/store) - centralized state management and direct access to application data
+- [Services/API](frontend/src/services/api) - modules responsible for sending HTTP methods
+
+- [Components tests](frontend/tests/components) - Cypress tests for checking React components with store provider. (They don't call any API requests)
+- [Store tests](frontend/tests/store) - Unit tests for checking getters and setters in all reducers
+- [E2E](frontend/tests/e2e) - End-to-end tests veryfying complete application functionality
