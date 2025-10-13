@@ -5,7 +5,7 @@ import type { LoginFormData } from '../../store/loginFormSlice';
 export const authApi = api.injectEndpoints({
   endpoints: (b) => ({
 
-    login: b.mutation<string, LoginFormData>({
+    postLogin: b.mutation<string, LoginFormData>({
       query: (body) => ({ 
         method: 'POST', 
         url: '/login', 
@@ -15,4 +15,4 @@ export const authApi = api.injectEndpoints({
 
   }),
 });
-export const { useLoginMutation } = authApi;
+export const { usePostLoginMutation } = authApi;

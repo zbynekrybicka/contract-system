@@ -1,21 +1,22 @@
-import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice';
-import loginFormReducer from './loginFormSlice'
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import auth from './authSlice';
+import loginForm from './loginFormSlice'
 import { api } from '../services/api';
 
-export const store = configureStore({
-  reducer: { 
+export const rootReducer = combineReducers({
     /**
      * Here register new reducers
      */
-    auth: authReducer,
-    loginForm: loginFormReducer,
+  auth,
+  loginForm,
+  [api.reducerPath]: api.reducer,
+});
 
-    [api.reducerPath]: api.reducer 
-  },
+export const store = configureStore({
+  reducer: rootReducer,
   middleware: (gDM) => gDM().concat(api.middleware),
 });
 
+export type RootState = ReturnType<typeof rootReducer>;
 export type Action<T> = { type: string, payload: T }
-export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
