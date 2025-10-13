@@ -1,6 +1,7 @@
 import { Provider } from 'react-redux'
 import Login from '../../src/components/Login'
-import { store } from '../../src/store'
+import { store }  from '../../src/store'
+
 
 describe('Login.cy.tsx', () => {
   it('playground', () => {
