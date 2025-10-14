@@ -2,8 +2,13 @@ import { api } from '.';
 
 import type { LoginFormData } from '../../store/loginFormSlice';
 
-export const authApi = api.injectEndpoints({
+export const userApi = api.injectEndpoints({
   endpoints: (b) => ({
+
+
+    getUserStatistics: b.query<Object, number>({
+      query: (id) => ({ method: 'GET', url: `/user/${id}/statistics` })
+    }),
 
     postLogin: b.mutation<string, LoginFormData>({
       query: (body) => ({ 
@@ -15,4 +20,4 @@ export const authApi = api.injectEndpoints({
 
   }),
 });
-export const { usePostLoginMutation } = authApi;
+export const { useGetUserStatisticsQuery, usePostLoginMutation } = userApi;
