@@ -1,0 +1,35 @@
+import { createSlice } from '@reduxjs/toolkit';
+import type { Action, RootState } from '.';
+
+export type %StateType% = {}
+
+const slice = createSlice({
+    name: "%reducerName%",
+
+    initialState: {},
+
+    reducers: {
+
+        /**
+         * 
+         * 
+         * @param state %StateType%
+         * @param action Action
+         */
+        %setter%: (state: %StateType%, action: Action<%payloadType%>) => {
+            
+        },
+        
+    }
+})
+
+/**
+ *
+ * 
+ * @param state 
+ * @returns %getterType%
+ */
+export const %getter% = (state: RootState): %getterType% => state.
+
+export default slice.reducer
+export const { %setter% } = slice.actions

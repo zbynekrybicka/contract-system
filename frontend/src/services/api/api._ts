@@ -1,0 +1,19 @@
+import { api } from '.';
+
+export type %RequestDataType% = {};
+
+export const contactsApi = api.injectEndpoints({
+
+  endpoints: (b) => ({
+
+    getContacts: b.query/mutation<%outputType%, %inputType%>({
+      query: (body) => ({ 
+        method: '%method%',
+        url: `%url%`,
+        body
+      }),
+    }),
+  }),
+  
+});
+export const { use%RequestName%Query/Mutation } = contactsApi;

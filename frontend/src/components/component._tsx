@@ -1,0 +1,20 @@
+import { useAppSelector, useAppDispatch } from "../hooks";
+import { use%APIrequest%Mutation } from "../services/api/%%%Api";
+import { %storeMethod% } from "../store/%%%Slice";
+
+export default function %ComponentName%() {
+  const dispatch = useAppDispatch()
+  const [ %apiRequest% ] = use%APIrequest%Mutation()
+
+  const %storeValue% = useAppSelector(%storeGetter%)
+
+  return (
+    <div>
+      <input placeholder="" 
+        defaultValue={}
+        onChange={e => dispatch(%storeSetter%(e.target.value))}
+      />
+      <button onClick={() => %apiRequest%({ }).then(({data}) => dispatch(%storeSetter%(data)))}></button>
+    </div>
+  )
+}

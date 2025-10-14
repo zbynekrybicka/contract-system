@@ -1,0 +1,30 @@
+<?php
+namespace App\Tests\Repository;
+
+use App\Entity\%EntityName%Entity;
+use App\Repository\%EntityName%Repository;
+
+final class %EntityName%RepositoryTest extends DatabaseTestCase
+{
+    /**
+     * @dataProvider data%TestName%
+     */
+    public function test%TestName%(): void
+    {
+        /** @var %EntityName%Repository $%entityName%Repository */
+        $%entityName%Repository = static::getContainer()->get(%EntityName%Repository::class);
+
+        /** @var %EntityName%Entity $%entityName% */
+        $%entityName% = $%entityName%Repository->%testName%();
+
+        // Final check
+        // $this->assertNotNull();
+        // $this->assertSame();
+    }
+
+    public static function data%TestName%(): array
+    {
+        return [
+        ];
+    }
+}

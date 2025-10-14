@@ -1,0 +1,11 @@
+import { store } from '../../src/store'
+import { %getter%, %setter% } from '../../src/store/%sliceName%Slice'
+
+test('Store: %sliceName%Slice', () => {
+  expect(%getter%(store.getState())).toBe(%initialValue%);
+
+  store.dispatch(%setter%(%value%));
+
+  expect(%getter%(store.getState())).toBe(%value%);
+});
+
