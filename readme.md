@@ -42,3 +42,21 @@ The [API services](frontend/src/services/api) are a contact layer with REST API 
 - [Components tests](frontend/tests/components) - Cypress tests for checking React components with store provider. (They don't call any API requests)
 - [Store tests](frontend/tests/store) - Unit tests for checking getters and setters in all reducers
 - [E2E](frontend/tests/e2e) - End-to-end tests veryfying complete application functionality
+
+
+## First install
+
+1. `git clone ...`
+2. Execute script `install-backend` in [scripts](scripts)
+3. Check the Adminer on http://localhost:8080 (`appuser:apppass@mysql/contract_system`)
+4. Execute script `setup-db` in [scripts](scripts)
+5. Go to [frontend](frontend)
+6. `npm install`
+
+## Execution after install
+
+1. Execute script `start-backend` in [scripts](scripts)
+2. Go to [frontend](frontend)
+3. `npm run dev`
+
+Don't forget if you want to close the backend, execute script `stop-backend` in [scripts](scripts)
