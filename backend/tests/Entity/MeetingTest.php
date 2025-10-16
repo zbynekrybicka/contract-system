@@ -7,19 +7,19 @@ use PHPUnit\Framework\TestCase;
 final class MeetingTest extends TestCase
 {
     /**
-     * @dataProvider data%TestName%
+     * @dataProvider dataCreate
      */
-    public function test%TestName%($%attribute%): void
+    public function testCreate(): void
     {
-        $%entityName% = new Meeting();
+        $meeting = new Meeting();
         // $this->assertSame($%attribute%, $%entityName%->get%attribute%());
     }
 
     
-    public static function data%TestName%(): array
+    public static function dataCreate(): array
     {
         return [
-            
+            []
         ];
     }
 

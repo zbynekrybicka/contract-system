@@ -1,33 +1,36 @@
 <?php
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+require __DIR__ . '/ApiTestCase.php';
 
-final class PostContactTest extends WebTestCase {
+
+final class PostContactTest extends ApiTestCase {
 
     /**
      * @dataProvider dataPostContact
      */
-    public function testPostContact(): void
+    public function testPostContact(array $data, int $status): void
     {
-        // HTTP client
-        $client = static::createClient();
-
-        // Data
-        $data = [
-        ];
-
         // HTTP Request
-        $client->request("POST", "/contact", [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
+        static::$client->request("POST", "/contact", [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
         
         // Response control
-        // $this->assertContains($client->getResponse()->getStatusCode(), [401]);
+        $this->assertSame(static::$client->getResponse()->getStatusCode(), $status);
     }
 
     public static function dataPostContact(): array 
     {
         return [
-
+            [
+                [
+                    "firstName" => "Zbynek", 
+                    "middleName" => "Kossai", 
+                    "lastName" => "Rybicka", 
+                    "dialNumber" => 420, 
+                    "phoneNumber" => "727815483", 
+                    "email" => "zbynek.rybicka" . time(). "@gmail.com"
+                ], 
+                201]
         ];
     }
 

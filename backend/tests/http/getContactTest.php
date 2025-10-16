@@ -1,33 +1,28 @@
 <?php
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+require __DIR__ . '/ApiTestCase.php';
 
-final class GetContactTest extends WebTestCase {
+
+final class GetContactTest extends ApiTestCase {
 
     /**
      * @dataProvider dataGetContact
      */
     public function testGetContact(): void
     {
-        // HTTP client
-        $client = static::createClient();
-
-        // Data
-        $data = [
-        ];
-
         // HTTP Request
-        $client->request("GET", "/contact", [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
-        
+        self::$client->request("GET", "/contact", [], [], [
+            'CONTENT-TYPE' => 'application/json',
+        ]);
         // Response control
-        // $this->assertContains($client->getResponse()->getStatusCode(), [401]);
+        $this->assertSame(self::$client->getResponse()->getStatusCode(), 200);
     }
 
     public static function dataGetContact(): array 
     {
         return [
-
+            []
         ];
     }
 

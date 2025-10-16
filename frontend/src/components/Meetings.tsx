@@ -1,7 +1,7 @@
-import { useGetMeetingsQuery } from '../services/api/meetingsApi';
+import { useGetMeetingQuery } from '../services/api/meetingApi';
 
 export default function Meetings(){
-  const { data } = useGetMeetingsQuery({});
+  const { data } = useGetMeetingQuery({});
 
   return <ul>{data?.map(m => <li key={m.id}>{m.title} ({new Date(m.startsAt).toLocaleString()})</li>)}</ul>;
 }

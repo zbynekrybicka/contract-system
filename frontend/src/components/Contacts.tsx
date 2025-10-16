@@ -1,9 +1,9 @@
-import { useGetContactsQuery, useCreateContactMutation } from '../services/api/contactsApi';
+import { useGetContactQuery, usePostContactMutation } from '../services/api/contactApi';
 
 export default function Contacts(){
-  const [createContact, { isLoading, error }] = useCreateContactMutation();
+  const [createContact, { isLoading, error }] = usePostContactMutation();
 
-  const { data } = useGetContactsQuery({ q: "Jiří" });
+  const { data } = useGetContactQuery({ q: "Jiří" });
 
   return (
     <div>

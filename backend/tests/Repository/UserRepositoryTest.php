@@ -33,4 +33,30 @@ final class UserRepositoryTest extends DatabaseTestCase
             ["a@b.cz", false]
         ];
     }
+
+
+    /**
+     * @dataProvider dataFind
+     */
+    public function testFind(int $id, int $contactId): void
+    {
+        /** @var UserRepository $userRepository */
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        /** @var User $user */
+        $user = $userRepository->find($id);
+
+        // Final check
+        // $this->assertNotNull();
+        $this->assertSame($user->getId(), $id);
+        $this->assertSame($user->getContact()->getId(), $contactId);
+    }
+
+    public static function dataFind(): array
+    {
+        return [
+            [ 1, 1 ]
+        ];
+    }
+
 }

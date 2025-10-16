@@ -1,33 +1,47 @@
 <?php
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+require __DIR__ . '/ApiTestCase.php';
 
-final class PutContactTest extends WebTestCase {
+final class PutContactTest extends ApiTestCase {
 
     /**
      * @dataProvider dataPutContact
      */
-    public function testPutContact(): void
+    public function testPutContact($id, $data, $status): void
     {
-        // HTTP client
-        $client = static::createClient();
-
-        // Data
-        $data = [
-        ];
-
         // HTTP Request
-        $client->request("PUT", "/contact", [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
+        static::$client->request("PUT", "/contact/" . $id, [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
         
         // Response control
-        // $this->assertContains($client->getResponse()->getStatusCode(), [401]);
+        $this->assertSame(static::$client->getResponse()->getStatusCode(), $status);
     }
 
     public static function dataPutContact(): array 
     {
         return [
-
+            [
+                4,
+                [
+                    "email" => "vaclav.tomanec" . time(). "@gmail.com",
+                    "firstName" => "Vaclav", 
+                    "lastName" => "Tomanec", 
+                    "middleName" => "Byznys", 
+                    "dialNumber" => 420, 
+                    "phoneNumber" => "123456789", 
+                ], 204
+            ],
+            [
+                1,
+                [
+                    "firstName" => "Vaclav", 
+                    "middleName" => "Byznys", 
+                    "lastName" => "Tomanec", 
+                    "dialNumber" => 420, 
+                    "phoneNumber" => "123456789", 
+                    "email" => "vaclav.tomanec" . time(). "@gmail.com"
+                ], 401
+            ]
         ];
     }
 

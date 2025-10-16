@@ -7,8 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'user')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-final class User implements UserInterface
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,6 +21,10 @@ final class User implements UserInterface
 
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\ManyToOne(targetEntity: Contact::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
+    private Contact $contact;
 
 
     /**
@@ -91,6 +96,12 @@ final class User implements UserInterface
     public function getUserIdentifier(): string
     {
         return strval($this->getId());
+    }
+
+
+    public function getContact(): Contact
+    {
+        return $this->contact;
     }
 
 }

@@ -1,33 +1,27 @@
 <?php
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+require __DIR__ . '/ApiTestCase.php';
 
-final class DeleteContactTest extends WebTestCase {
+final class DeleteContactTest extends ApiTestCase {
 
     /**
      * @dataProvider dataDeleteContact
      */
-    public function testDeleteContact(): void
+    public function testDeleteContact(int $id, int $status): void
     {
-        // HTTP client
-        $client = static::createClient();
-
-        // Data
-        $data = [
-        ];
-
         // HTTP Request
-        $client->request("DELETE", "/contact", [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
+        static::$client->request("DELETE", "/contact/" . $id, [], [], ['CONTENT_TYPE' => 'application/json']);
         
         // Response control
-        // $this->assertContains($client->getResponse()->getStatusCode(), [401]);
+        $this->assertSame(static::$client->getResponse()->getStatusCode(), $status);
     }
 
     public static function dataDeleteContact(): array 
     {
         return [
-
+            [2, 400],
+            [5, 204]
         ];
     }
 
