@@ -1,0 +1,113 @@
+@media (max-width: 499px) {
+    .Login .splash {
+        display: none;
+    }
+    .Login .login-form {
+        width: 100%;
+        padding: 0 15px;
+        height: 100vh;
+    }
+    .Login .login-form h1 {
+        text-align: center;
+        font-size: 60px;
+    }
+}
+
+@media (min-width: 500px) {
+    .Login .splash {
+        display: none;
+    }
+
+    .Login .login-form {
+        width: 100%;
+        padding: 40px;
+        height: calc(100vh - 80px);
+    }
+    .Login .login-form h1 {
+        text-align: center;
+        font-size: 60px;
+    }
+}
+@media (min-width: 889px) {
+    .Login .splash {
+        display: flex;
+        width: 70%;
+        background-image:url("../assets/splash-world.jpg");
+        background-position: top left;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .Login .login-form {
+        width: 30%;
+    }
+    .Login .login-form h1 {
+        display: none;
+    }
+}
+
+.Login {
+    display: flex;
+    height: 100vh;
+    background-color: #01253d;
+    color: #FFF;
+}
+
+.Login .splash h1 {
+    font-size: 60px;
+    margin: 0;
+    padding: 40px 40px 0 40px;
+}
+
+.Login .login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #001705;
+    color: #FFF;
+
+}
+
+.Login .login-form h2 {
+    text-align: center;
+    font-size: 40px;
+}
+
+.Login .login-form label {
+    display: flex;
+    flex-direction: column;
+}
+
+.Login .login-form .label {
+    font-size: 25px;
+}
+
+.Login .login-form input {
+    font-size: 20px;
+    margin: .3em 0 1em 0;
+    padding: 15px;
+    background-color: #535a63;
+    color: #FFF;
+    border-width: 0;
+}
+
+.Login .login-form input[type=checkbox] {
+    width: 18px;
+    height: 18px;
+    background-color: #535a63;
+}
+
+.Login .login-form button {
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    padding: 15px;
+    background-color: #426783;
+    color: #FFF;
+    border-width: 0;
+    height: 53px;
+}
+
+.Login .login-form button img {
+    height: 20px;
+}

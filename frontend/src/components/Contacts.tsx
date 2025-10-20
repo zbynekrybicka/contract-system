@@ -7,10 +7,15 @@ export default function Contacts(){
 
   return (
     <div>
-      <h2>Contacts</h2>
-      {!isLoading && <button onClick={() => createContact({name: 'New', email: 'new@example.com' })}>+ Add</button>}
-      <ul>{data?.map(c => <li key={c.id}>{c.name} — {c.email}</li>)}</ul>
-      {JSON.stringify(error)}
+      <h2>
+        <div className="inner-content">Contacts</div>
+      </h2>
+      <div className="inner-content routes">
+        <br/>
+        {!isLoading && <button onClick={() => createContact({name: 'New', email: 'new@example.com' })}>+ Add</button>}
+        <ul style={{backgroundColor:"#FFF", padding: '25px'}}>{data?.map(c => <li key={c.id}>{c.name} — {c.email}</li>)}</ul>
+        {JSON.stringify(error)}
+      </div>
     </div>
   );
 }
