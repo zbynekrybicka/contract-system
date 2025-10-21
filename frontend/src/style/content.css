@@ -1,0 +1,50 @@
+.content {
+
+}
+
+.content nav {
+    display: flex;
+    align-items: center;
+    background-color: #001705;
+    color: #FFF;
+}
+
+.content nav h1 {
+    margin: 0;
+    font-size: 15px;
+    padding: 0 40px 0 15px;
+}
+.content nav a {
+    padding: 15px 30px;
+    color: #FFE;
+    text-decoration: none;
+    font-weight: bold;
+
+}
+
+.content nav a:hover {
+    background-color: #4f8bb9;
+}
+
+.content .container {
+
+}
+
+.content .container h2 {
+    font-size: 40px;
+    background-color: #426783;
+    margin: 0;
+    padding: 15px;
+    color: #FFF;
+}
+
+.content .container .inner-content {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+.content .container .inner-content.routes {
+    padding: 25px;
+    width: calc(100vw - 50px);
+}
