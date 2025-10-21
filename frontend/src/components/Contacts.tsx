@@ -1,21 +1,18 @@
-import { useGetContactQuery, usePostContactMutation } from '../services/api/contactApi';
+// import { useGetContactsQuery } from '../services/api/contactsApi';
+import { useAppDispatch, useAppSelector } from '../hooks.ts';
+import { isShownForm, showForm } from '../store/newContactFormSlice.ts';
+import NewContact from './NewContact.tsx'
 
-export default function Contacts(){
-  const [createContact, { isLoading, error }] = usePostContactMutation();
-
-  const { data } = useGetContactQuery({ q: "Jiří" });
+export default function Contacts() {
+  const dispatch = useAppDispatch()
+  // const { data } = useGetContactsQuery({});
+  const isShownNewContact = useAppSelector(isShownForm)
 
   return (
     <div>
-      <h2>
-        <div className="inner-content">Contacts</div>
-      </h2>
-      <div className="inner-content routes">
-        <br/>
-        {!isLoading && <button onClick={() => createContact({name: 'New', email: 'new@example.com' })}>+ Add</button>}
-        <ul style={{backgroundColor:"#FFF", padding: '25px'}}>{data?.map(c => <li key={c.id}>{c.name} — {c.email}</li>)}</ul>
-        {JSON.stringify(error)}
-      </div>
+      {isShownNewContact && <NewContact />}
+      <h2>Contacts</h2>
+      <button className="button-new-contact" onClick={() => dispatch(showForm(true))}>New contact</button>
     </div>
   );
 }

@@ -1,11 +1,14 @@
 import { api } from '.';
+import type { NewContactFormData } from '../../store/newContactFormSlice';
 
 export type Contact = { 
   id: number; 
-  name: string; 
-  email: string; 
-  phone?: string|null; 
-  company?: string|null; 
+  firstname: string; 
+  middlename: string;
+  lastname: string;
+  dialnumber: number; 
+  phonenumber: string;
+  email: string;
 };
 
 export const contactApi = api.injectEndpoints({
@@ -20,7 +23,7 @@ export const contactApi = api.injectEndpoints({
       query: (id: number) => ({ method: 'GET', url: `/contact/${id}`})
     }),
 
-    postContact: b.mutation<{id:number}, Partial<Contact>>({
+    postContact: b.mutation<{id:number}, Partial<NewContactFormData>>({
       query: (body) => ({ method: 'POST', url: '/contact', body }),
     }),
 
