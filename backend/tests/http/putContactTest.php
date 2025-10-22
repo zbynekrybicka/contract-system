@@ -21,7 +21,7 @@ final class PutContactTest extends ApiTestCase {
     {
         return [
             [
-                4,
+                6,
                 [
                     "email" => "vaclav.tomanec" . time(). "@gmail.com",
                     "firstName" => "Vaclav", 

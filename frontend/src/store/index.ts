@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import auth from './authSlice';
 import loginForm from './loginFormSlice'
 import newContactForm from './newContactFormSlice'
+import editContactForm from './editContactFormSlice'
 import { api } from '../services/api';
 
 export const rootReducer = combineReducers({
@@ -11,6 +12,7 @@ export const rootReducer = combineReducers({
   auth,
   loginForm,
   newContactForm,
+  editContactForm,
   [api.reducerPath]: api.reducer,
 });
 

@@ -7,6 +7,7 @@ import './style/content.css'
 
 import Login from './components/Login'; 
 import Contacts from './components/Contacts'; 
+import ContactDetail from './components/ContactDetail';
 import Meetings from './components/Meetings';
 import Contracts from './components/Contracts';
 
@@ -33,6 +34,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Dashboard/>} />
             <Route path="/contacts" element={<Contacts/>} />
+            <Route path="/contacts/:id" element={<ContactDetail/>} />
             <Route path="/meetings" element={<Meetings/>} />
             <Route path="/contracts" element={<Contracts />} />
             <Route path="*" element={<Navigate to="/contacts" replace />} />

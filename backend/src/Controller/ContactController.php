@@ -33,16 +33,22 @@ class ContactController extends AbstractController
     #[Route('', methods: ['GET'])]
     public function getAll(ContactRepository $contactRepository): JsonResponse
     {
-        $contactList = $contactRepository->getAll();
+        $user = $this->userRepository->findByToken();
+        $contactList = $contactRepository->getBySuperior($user->getContact());
         return $this->json($contactList);
     }
 
 
     #[Route('/{id}', methods: ['GET'])]
-    public function getOne(ContactRepository $contactRepository): JsonResponse
+    public function getOne(ContactRepository $contactRepository, int $id): JsonResponse
     {
-        $contactList = $contactRepository->findAll();
-        return $this->json($contactList);
+        $user = $this->userRepository->findByToken();
+        $contact = $contactRepository->findWithSuperior($user->getContact(), $id);
+        if ($contact) {
+            return $this->json($contact, 200);
+        } else {
+            return $this->json(null, 400);
+        }
     }
 
 
@@ -69,7 +75,7 @@ class ContactController extends AbstractController
         }
 
         $contact->hydrate(...$data);
-        $contactRepository->update($contact);
+        $this->contactRepository->update($contact);
         return $this->json(null, 204);
     }
 

@@ -3,11 +3,11 @@ import type { NewContactFormData } from '../../store/newContactFormSlice';
 
 export type Contact = { 
   id: number; 
-  firstname: string; 
-  middlename: string;
-  lastname: string;
-  dialnumber: number; 
-  phonenumber: string;
+  firstName: string; 
+  middleName: string;
+  lastName: string;
+  dialNumber: number; 
+  phoneNumber: string;
   email: string;
 };
 
@@ -19,7 +19,7 @@ export const contactApi = api.injectEndpoints({
       query: () => ({ method: 'GET', url: `/contact` }),
     }),
 
-    getOneContact: b.query<Contact, {}>({
+    getOneContact: b.query<Contact, number>({
       query: (id: number) => ({ method: 'GET', url: `/contact/${id}`})
     }),
 
@@ -27,8 +27,8 @@ export const contactApi = api.injectEndpoints({
       query: (body) => ({ method: 'POST', url: '/contact', body }),
     }),
 
-    putContact: b.mutation<null, Partial<Contact>>({
-      query: (body) => ({ method: 'PUT', url: `/contact/${body.id}`, body })
+    putContact: b.mutation<null, [number, Partial<Contact>]>({
+      query: ([id, body]) => ({ method: 'PUT', url: `/contact/${id}`, body })
     }),
 
     deleteContact: b.mutation<null, number>({

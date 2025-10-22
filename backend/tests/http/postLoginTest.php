@@ -1,18 +1,15 @@
 <?php
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+require __DIR__ . '/ApiTestCase.php';
 
-final class PostLoginTest extends WebTestCase {
+final class PostLoginTest extends ApiTestCase {
 
     /**
      * @dataProvider dataPostLogin
      */
     public function testPostLogin(string $email, string $password, int $result): void
     {
-        // HTTP client
-        $client = static::createClient();
-
         // Data
         $data = [
             'email'=> $email,
@@ -20,22 +17,23 @@ final class PostLoginTest extends WebTestCase {
         ];
 
         // HTTP Request
-        $client->request("POST", "/login", [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
+        static::$client->request("POST", "/login", [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
         
         // Response control
-        $this->assertContains($client->getResponse()->getStatusCode(), [401]);
+        $this->assertSame(static::$client->getResponse()->getStatusCode(), $result);
     }
 
     public static function dataPostLogin(): array 
     {
         return [
-            [ "", "ahoj", 400],
-            [ "admin", "admin", 400],
-            [ "admin@admin", "admin", 400],
-            [ "@admin.cz", "admin", 400],
+            [ "", "admin", 400],
+            [ "admin", "", 400],
+            [ "admin", "admin", 401],
+            [ "admin@admin", "admin", 401],
+            [ "@admin.cz", "admin", 401],
             [ "x@x.cz", "x", 401],
             [ "test@demo.cz", "pass000", 401],
-            [ "test@demo.cz", "pass123", 200]
+            [ "test@demo.cz", "password123", 200]
         ];
     }
 

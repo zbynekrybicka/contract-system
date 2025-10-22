@@ -12,19 +12,26 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 class UserController extends AbstractController
 {
+
+    private $userRepository;
+
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * POST /login
      * Request for get authorization token for access to system
      * Test: postLoginTest.php
      * 
      * @param Request $request, 
-     * @param UserRepository $users, 
      * @param JWTTokenManagerInterface $jwtManager
      * @return JsonResponse
      */
     #[Route('/login', name: 'login', methods: ['POST'])]
     public function login(Request $request, 
-        UserRepository $users,
         JWTTokenManagerInterface $jwtManager
     ): JsonResponse 
     {
@@ -42,7 +49,7 @@ class UserController extends AbstractController
         $password = $data['password'];        
 
         // find user
-        $user = $users->findByEmail($email);
+        $user = $this->userRepository->findByEmail($email);
 
         // check password
         $isPasswordCorrect = $this->passwordVerify($user, $password);
@@ -81,11 +88,11 @@ class UserController extends AbstractController
      * Verify if user exists and password is correct
      * 
      * @param UserPasswordHasherInterface $hasher
-     * @param User $user
+     * @param ?User $user
      * @param string $password
      * @return bool
      */
-    private function passwordVerify(User $user, string $password): bool
+    private function passwordVerify(?User $user, string $password): bool
     {
         // check valid user
         if (!$user) {

@@ -23,13 +23,28 @@ class ContactRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findOne(int $id): ?array
+
+    public function getBySuperior(Contact $superior): array
     {
-        $row = $this->db->executeQuery(
-            'SELECT * FROM %TableName% WHERE id = :id',
-            ['id' => $id],
-            ['id' => \PDO::PARAM_INT]
-        )->fetchAssociative();
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("contact")
+            ->from("\App\Entity\Contact", "contact")
+            ->andWhere("contact.superior = :superior")
+            ->setParameter("superior", $superior)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function findById(int $id): ?array
+    {
+        $row = $this->getEntityManager()->createQueryBuilder()
+            ->select("contact")
+            ->from("\App\Entity\Contact", "contact")
+            ->andWhere("contact.id = :contactId")
+            ->setParameter("contactId", $id)
+            ->getQuery()
+            ->getAssociativeArray();
 
         return $row ?: null;
     }
