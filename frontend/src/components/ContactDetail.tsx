@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import { useGetOneContactQuery } from "../services/api/contactApi"
 import { isShownForm, hydrate, showForm } from "../store/editContactFormSlice";
 import EditContact from "./EditContact.tsx";
+import ContactHistory from "./ContactHistory"
 import { useEffect } from "react";
 
 export default function ContactDetail() {
@@ -33,7 +34,8 @@ export default function ContactDetail() {
             <div className="inner-content">{contactDetail?.firstName} {contactDetail?.middleName} {contactDetail?.lastName}</div>
         </h2>
         <div className="inner-content route">
-            <button className="edit-contact" onClick={() => dispatch(showForm(true))}>Edit contact</button>
+          <button className="edit-contact" onClick={() => dispatch(showForm(true))}>Edit contact</button>
+          <ContactHistory />
         </div>
       </div>}
     </div>

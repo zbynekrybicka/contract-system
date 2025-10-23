@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-// #[ORM\Entity(repositoryClass: CallRepository::class)]
+#[ORM\Entity(repositoryClass: CallRepository::class)]
 #[ORM\Table(
-    name: 'call',
+    name: 'realized_call',
     // indexes: [new ORM\Index(name: 'idx_%TableName%_%Column%', columns: ['%Column%'])],
     // uniqueConstraints: [new ORM\UniqueConstraint(name: 'uniq_%TableName%_%Column%', columns: ['%Column%'])]
 )]
@@ -25,10 +25,6 @@ final class Call
     private ?int $id = null;
 
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    private \DateTimeImmutable $realized_at;
-
-
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
     private Contact $sender;
@@ -37,8 +33,24 @@ final class Call
     #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
     private Contact $receiver;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $note = null;
+    #[ORM\Column(name: "purpose", type: Types::TEXT, nullable: false)]
+    private string $purpose = "";
+
+    #[ORM\Column(name: "realized_at", type: Types::DATETIME_IMMUTABLE)]
+    private \DateTimeImmutable $realizedAt;
+
+    #[ORM\Column(name: "successful", type: "boolean", nullable: false, options: ['default' => 0])]
+    private bool $successful = false;
+
+    #[Column(name: "result_type", type: "string", columnDefinition: "ENUM('meeting', 'rejected', 'postponed')")]
+    #[Assert\NotBlank]
+    private string $type;
+
+    #[ORM\Column(name: "description", type: Types::TEXT, nullable: true)]
+    private string $description = "";
+
+    #[ORM\Column(name: "next_call", type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTime $nextCall = null;
 
     // ---- required field (string with length)
     /*#[ORM\Column(length: 160)]
@@ -85,10 +97,16 @@ final class Call
     private Collection $tags;
     */
 
-    public function __construct()
+    public function __construct(Contact $sender, Contact $receiver, string $purpose, bool $successful, string $type, string $description, ?\DateTime $nextCall)
     {
-        // $this->%Column% = new \DateTimeImmutable();
-        // $this->%Column% = new ArrayCollection();
+        $this->realizedAt = new \DateTimeImmutable();
+        $this->sender = $sender;
+        $this->receiver = $receiver;
+        $this->purpose = $purpose;
+        $this->successful = $successful;
+        $this->type = $type;
+        $this->description = $description;
+        $this->nextCall = $nextCall;
     }
 
     // ---- OnUpdate
@@ -100,6 +118,42 @@ final class Call
 
     public function getId(): ?int { 
         return $this->id; 
+    }
+
+
+    public function getRealizedAt(): \DateTimeImmutable
+    {
+        return $this->realizedAt;
+    }
+
+
+    public function getReceiver(): Contact
+    {
+        return $this->receiver;
+    }
+
+
+    public function isSuccessful(): bool
+    {
+        return $this->successful;
+    }
+
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+
+    public function getNextCall(): ?\DateTimeImmutable
+    {
+        return $this->nextCall;
     }
 
 

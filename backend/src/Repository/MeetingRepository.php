@@ -25,9 +25,11 @@ class MeetingRepository extends ServiceEntityRepository
         return $row ?: null;
     }
 
-    public function newMeeting(): Meeting
+    public function create(array $participants, \DateTimeImmutable $appointment, string $place): Meeting
     {
-        return new Meeting();
+        $meeting = new Meeting($participants, $appointment, $place);
+        $this->persistMeeting($meeting);
+        return $meeting;
     }
 
     public function persistMeeting(Meeting $item)

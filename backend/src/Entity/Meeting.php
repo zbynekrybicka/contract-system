@@ -33,8 +33,8 @@ final class Meeting
 
     #[ORM\ManyToMany(targetEntity: Contact::class)]
     #[ORM\JoinTable(name: 'contact_meeting')]
-    #[ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
-    #[ORM\InverseJoinColumn(name: 'meeting_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
+    #[ORM\JoinColumn(name: 'meeting_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
+    #[ORM\InverseJoinColumn(name: 'contact_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
     private Collection $participants;
 
     // ---- required field (string with length)
@@ -82,8 +82,11 @@ final class Meeting
     private Collection $tags;
     */
 
-    public function __construct()
+    public function __construct(array $participants, \DateTimeImmutable $appointment, string $place)
     {
+        $this->participants = new ArrayCollection($participants);
+        $this->appointment = $appointment;
+        $this->place = $place;
         // $this->%Column% = new \DateTimeImmutable();
         // $this->%Column% = new ArrayCollection();
     }

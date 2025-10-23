@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Call;
+use App\Entity\Contact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,9 +26,11 @@ class CallRepository extends ServiceEntityRepository
         return $row ?: null;
     }
 
-    public function newCall(): Call
+    public function create(Contact $sender, Contact $receiver, string $purpose, bool $successful, string $type, string $description, ?\DateTime $nextCall): Call
     {
-        return new Call();
+        $call = new Call($sender, $receiver, $purpose, $successful, $type, $description, $nextCall);
+        $this->persistCall($call);
+        return $call;
     }
 
     public function persistCall(Call $item)
