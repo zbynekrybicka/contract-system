@@ -16,6 +16,7 @@ export default function CalendarWeek({ meetingList })
 
             meetingElement.style.left = calendarElement?.offsetLeft + "px"
             meetingElement.style.top = calendarElement?.offsetTop + "px"
+            meetingElement.style.width = calendarElement?.offsetWidth + "px"
 
             // console.log([meeting.appointment, appointment, calendarSelector, meetingSelector, calendarElement, meetingElement, innerWidth])
         }
@@ -35,6 +36,12 @@ export default function CalendarWeek({ meetingList })
                 })}
             </div>)}
         </div>)}
-        {meetingList.map(meeting => <div className="calendar-event meeting" key={meeting.id} data-meeting-id={meeting.id}>{meeting.appointment}</div>)}
+        {meetingList.map(meeting => {
+            const appointment = DateTime.fromISO(meeting.appointment)
+            return <div className="calendar-event meeting" key={meeting.id} data-meeting-id={meeting.id}>
+                {appointment.toFormat('dd.MM HH:mm')}
+                {meeting.participants.map(participant => <div>{participant.lastName}</div>)}
+            </div>
+        })}
     </div>
 }
