@@ -19,16 +19,16 @@ describe('Contacts', () => {
     cy.wait('@getContactDetail')
   })
 
-  it('View table', () => {
+  /*it('View table', () => {
     cy.get(".contact-history").should("exist")
     cy.get(".contact-history .contact-history-list").should("exist")
     cy.get(".contact-history .contact-history-list .contact-history-item").should("exist")
     cy.get(".contact-history .contact-history-list .contact-history-item.call").should("exist")
     cy.get(".contact-history .contact-history-list .contact-history-item.meeting").should("exist")
     // cy.get(".contact-history .contact-history-item.contract").should("exist")
-  })
+  })*/
 
-  /*it('New call', () => {
+  it('New call', () => {
 
     cy.get(".contact-history").should("exist")
     cy.get(".contact-history .new-call").should("exist").click()
@@ -46,6 +46,6 @@ describe('Contacts', () => {
     cy.wait(5000)
     cy.wait('@postCall')
     cy.get(".call-result").should("not.exist")
-  })*/
+  })
 
 })

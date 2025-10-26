@@ -20,7 +20,8 @@ export const contactApi = api.injectEndpoints({
     }),
 
     getOneContact: b.query<Contact, string>({
-      query: (id: string) => ({ method: 'GET', url: `/contact/${id}`})
+      query: (id: string) => ({ method: 'GET', url: `/contact/${id}`}),
+      providesTags: (_err, _res, id) => [{ type: "Contact", id }]
     }),
 
     postContact: b.mutation<{id:number}, Partial<NewContactFormData>>({
