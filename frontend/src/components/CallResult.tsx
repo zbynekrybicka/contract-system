@@ -30,41 +30,52 @@ export default function CallResult() {
   });
 
   return (
-    <div className="call-result">
-        <label>
-            Call purpose
-            <textarea name="purpose" defaultValue={purpose} onChange={e => dispatch(setPurpose(e.target.value))}></textarea>
-        </label>
-        <button className="call-begin">Begin call</button>
-        <label>
-            <input type="checkbox" name="successful" defaultChecked={successful} onChange={e => dispatch(setSuccessful(e.target.checked))} /> Call was successful
-        </label>
-        <label>
-            <select name="type" defaultValue={type} onChange={e => dispatch(setType(e.target.value))}>
-                <option></option>
-                <option value="meeting">Meeting</option>
-                <option value="rejected">Rejected</option>
-                <option value="postponed">Postponed until later</option>
-            </select>
-        </label>
-        <label>
-            Final Description
-            <textarea name="description" defaultValue={description} onChange={e => dispatch(setDescription(e.target.value))}></textarea>
-        </label>
-        <label>
-            Meeting Appointment
-            <input type="datetime-local" name="meeting-appointment" defaultValue={meetingAppointment} onChange={e => dispatch(setMeetingAppointment(e.target.value))} />
-        </label>
-        <label>
-            Meeting Place
-            <input type="text" name="place" defaultValue={place} onChange={e => dispatch(setPlace(e.target.value))} />
-        </label>
-        <label>
-            Call later
-            <input type="datetime-local" name="next-call" defaultValue={nextCall} onChange={e => dispatch(setNextCall(e.target.value))} />
-        </label>
-        {isLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> : <button className="save-result" onClick={handleSaveCallResult}>Save Call Result</button>}
-        <button onClick={() => dispatch(showForm(false))}>X</button>
+    <div className="dialog-background">
+        <div className="dialog call-result">
+            <div className="header">
+                Call Result
+                <button onClick={() => dispatch(showForm(false))}>X</button>
+            </div>
+            <label>
+                Call purpose
+                <textarea name="purpose" defaultValue={purpose} onChange={e => dispatch(setPurpose(e.target.value))}></textarea>
+            </label>
+            <div className="footer">
+                <button className="call-begin">Begin call</button>
+            </div>
+            <label>
+                <div className="row">
+                    <input type="checkbox" name="successful" defaultChecked={successful} onChange={e => dispatch(setSuccessful(e.target.checked))} /> Call was successful
+                </div>
+            </label>
+            <label>
+                <select name="type" defaultValue={type} onChange={e => dispatch(setType(e.target.value))}>
+                    <option></option>
+                    <option value="meeting">Meeting</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="postponed">Postponed until later</option>
+                </select>
+            </label>
+            <label>
+                Final Description
+                <textarea name="description" defaultValue={description} onChange={e => dispatch(setDescription(e.target.value))}></textarea>
+            </label>
+            <label>
+                Meeting Appointment
+                <input type="datetime-local" name="meeting-appointment" defaultValue={meetingAppointment} onChange={e => dispatch(setMeetingAppointment(e.target.value))} />
+            </label>
+            <label>
+                Meeting Place
+                <input type="text" name="place" defaultValue={place} onChange={e => dispatch(setPlace(e.target.value))} />
+            </label>
+            <label>
+                Call later
+                <input type="datetime-local" name="next-call" defaultValue={nextCall} onChange={e => dispatch(setNextCall(e.target.value))} />
+            </label>
+            <div className="footer">
+                {isLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> : <button className="save-result" onClick={handleSaveCallResult}>Save Call Result</button>}
+            </div>
+        </div>
     </div>
   )
 }

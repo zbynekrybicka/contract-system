@@ -11,8 +11,15 @@
 
 .calendar-week > div.calendar-day > div.calendar-hour {
     border: 1px solid black;
+    border-radius: 5px;
 }
 
 .calendar-event {
     position: absolute;
+    border-radius: 5px;
+    background-color: rgb(33, 75, 33);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 5px 0 5px 1px;
 }

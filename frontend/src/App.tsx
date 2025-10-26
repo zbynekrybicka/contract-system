@@ -5,6 +5,7 @@ import './style/App.css'
 import './style/login.css'
 import './style/content.css'
 import './style/calendar.css'
+import './style/dialogs.css'
 
 import Login from './components/Login'; 
 import Contacts from './components/Contacts'; 

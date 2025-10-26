@@ -1,0 +1,64 @@
+.dialog-background {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0009;
+}
+
+.dialog-background .dialog {
+    margin: 5vh auto 0 auto;
+    width: 75vw;
+    border: 1px solid black;
+    border-radius: 25px;
+    background-color: #FFF;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dialog-background .dialog .header {
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+}
+.dialog-background .dialog .header button {
+    float: right;
+    border: 0;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+}
+.dialog-background .dialog .header button:hover {
+    background-color: rgb(227, 251, 255);   
+}
+.dialog-background .dialog .footer {
+    text-align: right;
+}
+.dialog-background .dialog .footer button {
+    font-size: 18px;
+    border: 0;
+    background-color: #426783;
+    font-weight: bold;
+    color: #FFF;
+    padding: 5px 15px;
+    cursor: pointer;
+}
+
+.dialog-background .dialog label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 1em;
+}
+.dialog-background .dialog label input,
+.dialog-background .dialog label select,
+.dialog-background .dialog label textarea {
+    font-size: 16px;
+}
+.dialog-background .dialog label div.row {
+    display: flex;
+}
