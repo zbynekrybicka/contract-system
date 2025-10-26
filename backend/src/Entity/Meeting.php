@@ -98,8 +98,31 @@ final class Meeting
     }
     */
 
-    public function getId(): ?int { 
+    public function getId(): ?int
+    {
         return $this->id; 
+    }
+
+
+    public function getAppointment(): \DateTimeImmutable 
+    {
+        return $this->appointment;
+    }
+
+
+    public function getPlace(): string 
+    {
+        return $this->place;
+    }
+
+
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function getParticipantIds(): array {
+        return array_map(fn($p) => $p->getId(), $this->participants->toArray());
     }
 
 

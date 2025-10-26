@@ -16,7 +16,6 @@ export default function CallResult() {
   const place = useAppSelector(getPlace)
   const nextCall = useAppSelector(getNextCall)
 
-
   const handleSaveCallResult = () => postCall({
     contact_id: parseInt(id || ""),
     purpose,
@@ -27,9 +26,6 @@ export default function CallResult() {
     place,
     nextCall,
   } as CallResultForm).then(() => dispatch(showForm(false)));
-  // const [ %apiRequest%, { isLoading } ] = use%APIrequest%Mutation()
-
-  // const %storeValue% = useAppSelector(%storeGetter%)
 
   return (
     <div className="call-result">

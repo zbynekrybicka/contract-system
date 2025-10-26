@@ -43,7 +43,7 @@ export default function Login() {
             />
           </label>
           <label><div className="label"><input type="checkbox" /> Remember me</div></label>
-          <button onClick={onClick}>{isLoading ? <img src={"/src/assets/tube-spinner.svg"} /> : "Login"}</button>
+          <button>{isLoading ? <img src={"/src/assets/tube-spinner.svg"} /> : "Login"}</button>
       </form>
     </div>
   )

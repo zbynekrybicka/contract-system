@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Meeting;
+use App\Entity\Contact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,6 +24,17 @@ class MeetingRepository extends ServiceEntityRepository
         )->fetchAssociative();
 
         return $row ?: null;
+    }
+
+
+    public function findByContact(Contact $contact): array
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("meeting")
+            ->from(Meeting::class, "meeting")
+            ->andWhere(":contact MEMBER OF meeting.participants")
+            ->setParameter("contact", $contact)
+            ->getQuery()->getResult();
     }
 
     public function create(array $participants, \DateTimeImmutable $appointment, string $place): Meeting

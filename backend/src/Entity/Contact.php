@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 #[ORM\Table(
@@ -24,6 +26,7 @@ class Contact
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Ignore]
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'RESTRICT')]
     private ?Contact $superior;
@@ -47,6 +50,16 @@ class Contact
 
     #[ORM\Column(name: "phone_number", length: 9)]
     private string $phoneNumber;
+
+    #[ORM\OneToMany(targetEntity: Call::class, mappedBy: "sender")]
+    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
+    private Collection $calls;
+
+    #[ORM\ManyToMany(targetEntity: Meeting::class)]
+    #[ORM\JoinTable(name: 'contact_meeting')]
+    #[ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
+    #[ORM\InverseJoinColumn(name: 'meeting_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
+    private Collection $meetings;
 
 
     public function __construct(?Contact $superior, string $firstName, string $middleName, string $lastName, int $dialNumber, string $phoneNumber, string $email = "")
@@ -104,6 +117,16 @@ class Contact
     public function getPhoneNumber(): string
     {
         return $this->phoneNumber;
+    }
+
+    public function getCalls(): Collection
+    {
+        return $this->calls;
+    }
+
+    public function getMeetings(): Collection
+    {
+        return $this->meetings;
     }
 
 

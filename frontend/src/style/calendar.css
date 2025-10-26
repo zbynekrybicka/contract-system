@@ -1,0 +1,18 @@
+.calendar-week {
+    display: flex;
+    flex-direction: row;
+}
+
+.calendar-week > div.calendar-day {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% / 7);
+}
+
+.calendar-week > div.calendar-day > div.calendar-hour {
+    border: 1px solid black;
+}
+
+.calendar-event {
+    position: absolute;
+}

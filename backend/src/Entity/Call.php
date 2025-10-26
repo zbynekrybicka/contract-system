@@ -22,34 +22,43 @@ final class Call
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['contact:read'])]
     private ?int $id = null;
 
 
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
-    private Contact $sender;
+    #[Groups(['contact:read'])]
+    private Contact $receiver;
 
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
-    private Contact $receiver;
+    #[Groups(['contact:read'])]
+    private Contact $sender;
 
     #[ORM\Column(name: "purpose", type: Types::TEXT, nullable: false)]
+    #[Groups(['contact:read'])]
     private string $purpose = "";
 
     #[ORM\Column(name: "realized_at", type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['contact:read'])]
     private \DateTimeImmutable $realizedAt;
 
     #[ORM\Column(name: "successful", type: "boolean", nullable: false, options: ['default' => 0])]
+    #[Groups(['contact:read'])]
     private bool $successful = false;
 
     #[Column(name: "result_type", type: "string", columnDefinition: "ENUM('meeting', 'rejected', 'postponed')")]
     #[Assert\NotBlank]
+    #[Groups(['contact:read'])]
     private string $type;
 
     #[ORM\Column(name: "description", type: Types::TEXT, nullable: true)]
+    #[Groups(['contact:read'])]
     private string $description = "";
 
     #[ORM\Column(name: "next_call", type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['contact:read'])]
     private ?\DateTime $nextCall = null;
 
     // ---- required field (string with length)
@@ -121,6 +130,12 @@ final class Call
     }
 
 
+    public function getPurpose(): string
+    {
+        return $this->purpose;
+    }
+
+
     public function getRealizedAt(): \DateTimeImmutable
     {
         return $this->realizedAt;
@@ -151,7 +166,7 @@ final class Call
     }
 
 
-    public function getNextCall(): ?\DateTimeImmutable
+    public function getNextCall(): ?\DateTime
     {
         return $this->nextCall;
     }

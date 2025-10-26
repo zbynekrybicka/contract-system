@@ -10,8 +10,8 @@ export default function ContactDetail() {
   const dispatch = useAppDispatch()
   const isShownEditContactForm = useAppSelector(isShownForm)
 
-  const { id } = useParams()
-  const { data: contactDetail, isLoading: isContactDetailLoading } = useGetOneContactQuery(id ? parseInt(id) : 0)
+  const id = useParams().id || ""
+  const { data: contactDetail, isLoading: isContactDetailLoading } = useGetOneContactQuery(id)
 
   useEffect(() => {
     // console.log("useEffect: [isContactDetailLoading]")
@@ -30,14 +30,16 @@ export default function ContactDetail() {
       {isShownEditContactForm && <EditContact />}
       {isContactDetailLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" />
       : <div>
-        <h2>
-            <div className="inner-content">{contactDetail?.firstName} {contactDetail?.middleName} {contactDetail?.lastName}</div>
-        </h2>
-        <div className="inner-content route">
-          <button className="edit-contact" onClick={() => dispatch(showForm(true))}>Edit contact</button>
-          <ContactHistory />
-        </div>
-      </div>}
+          {contactDetail && <>
+            <h2>
+                <div className="inner-content">{contactDetail?.firstName} {contactDetail?.middleName} {contactDetail?.lastName}</div>
+            </h2>
+            <div className="inner-content route">
+              <button className="edit-contact" onClick={() => dispatch(showForm(true))}>Edit contact</button>
+              <ContactHistory contact={contactDetail} />
+            </div>
+          </>}
+        </div>}
     </div>
   )
 }

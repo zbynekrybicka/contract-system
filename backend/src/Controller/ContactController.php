@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer as AON;
+
 #[Route('/contact')]
 class ContactController extends AbstractController
 {
@@ -35,7 +37,9 @@ class ContactController extends AbstractController
     {
         $user = $this->userRepository->findByToken();
         $contactList = $contactRepository->getBySuperior($user->getContact());
-        return $this->json($contactList);
+        return $this->json($contactList, 200, [], [ 'attributes' => [
+            'id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber'
+        ]]);
     }
 
 
@@ -45,7 +49,17 @@ class ContactController extends AbstractController
         $user = $this->userRepository->findByToken();
         $contact = $contactRepository->findWithSuperior($user->getContact(), $id);
         if ($contact) {
-            return $this->json($contact, 200);
+            return $this->json($contact, 200, [], [ 
+                'attributes' => [ 
+                    'id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber', 
+                    'calls' => [ 'id', 'purpose', 'realizedAt', 'successful', 'description', 'nextCall' ],
+                    'meetings' => [ 
+                        'id', 'appointment', 'place', 
+                        'participants' => [ 'id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber' ]
+                    ]
+                ],
+                AON::CIRCULAR_REFERENCE_HANDLER => fn ($o) => [ 'id' => $o->getId() ],
+            ]);
         } else {
             return $this->json(null, 400);
         }

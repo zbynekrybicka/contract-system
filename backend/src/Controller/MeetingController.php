@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Meeting;
+use App\Repository\UserRepository;
 use App\Repository\MeetingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,25 +13,39 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/meeting')]
 class MeetingController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em) {}
+
+    private $userRepository;
+    private $meetingRepository;
+
+    public function __construct(UserRepository $userRepository, MeetingRepository $meetingRepository)
+    {
+        $this->userRepository = $userRepository;
+        $this->meetingRepository = $meetingRepository;
+    }
 
 
     #[Route('', methods: ['GET'])]
-    public function getAll(MeetingRepository $meetingrepository): JsonResponse
+    public function getAll(): JsonResponse
     {
-        $meetingList = $meetingrepository->findAll();
-        return $this->json($meetingList);
+        $user = $this->userRepository->findByToken();
+        $meetingList = $this->meetingRepository->findByContact($user->getContact());
+        return $this->json($meetingList, 200, [], [
+            'attributes' => [
+                'id', 'appointment', 'place',
+                'participants' => [ 'id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber' ]
+            ]
+        ]);
     }
 
     #[Route('/{id}', methods: ['GET'])]
-    public function getOne(MeetingRepository $meetingrepository): JsonResponse
+    public function getOne(): JsonResponse
     {
         $meetingList = $meetingrepository->findAll();
         return $this->json($meetingList);
     }
 
     #[Route('', methods: ['POST'])]
-    public function create(Request $request, MeetingRepository $meetingrepository): JsonResponse
+    public function create(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         $meeting = $meetingrepository->create($data);
@@ -39,7 +54,7 @@ class MeetingController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['PUT'])]
-    public function update(Meeting $meeting, MeetingRepository $meetingrepository): JsonResponse
+    public function update(Meeting $meeting): JsonResponse
     {
 
         $meetingrepository->persist($meeting);
@@ -47,7 +62,7 @@ class MeetingController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['DELETE'])]
-    public function delete(Meeting $meeting, MeetingRepository $meetingrepository): JsonResponse
+    public function delete(Meeting $meeting): JsonResponse
     {
         $meetingrepository->delete($meeting);
         return $this->json(null, 204);

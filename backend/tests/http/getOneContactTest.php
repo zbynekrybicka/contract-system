@@ -14,7 +14,11 @@ final class GetOneContactTest extends ApiTestCase {
         static::$client->request("GET", "/contact/$id", [], [], ['CONTENT_TYPE' => 'application/json']);
         
         // Response control
-        $this->assertSame(static::$client->getResponse()->getStatusCode(), $result);
+        $statusCode = static::$client->getResponse()->getStatusCode();
+        $this->assertSame($statusCode, $result);
+        if ($statusCode === 200) {
+            dump(static::$client->getResponse()->getContent());
+        }
     }
 
     public static function dataGetOneContact(): array 

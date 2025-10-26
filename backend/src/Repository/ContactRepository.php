@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\Contact;
+use App\Entity\Call;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -54,13 +55,12 @@ class ContactRepository extends ServiceEntityRepository
     {
         return $this->getEntityManager()->createQueryBuilder()
             ->select("contact")
-            ->from("\App\Entity\Contact", "contact")
+            ->from(Contact::class, "contact")
             ->andWhere("contact.id = :contactId")
             ->andWhere("contact.superior = :superior")
             ->setParameter("contactId", $contactId)
             ->setParameter("superior", $superior)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->getQuery()->getOneOrNullResult();
     }
 
     public function newContact(): Contact

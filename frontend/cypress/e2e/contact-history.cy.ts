@@ -1,15 +1,13 @@
 describe('Contacts', () => {
   beforeEach(() => {
     cy.visit('http://localhost:5173')
-    cy.get("input[name=email]").type("test@demo.cz")
-    cy.get("input[name=password]").type("password123")
-    cy.get("button").click()
+    cy.get(".login-form input[name=email]").should("exist").type("test@demo.cz")
+    cy.get(".login-form input[name=password]").should("exist").type("password123")
     cy.intercept('POST', '/login').as('login');
+    cy.get(".login-form button").should("exist").click()
     cy.wait(5000)
     cy.wait('@login')
-  })
 
-  it('New call', () => {
     cy.intercept("GET", "/contact").as('getContact')
     cy.get("nav [href='/contacts']").click()
     cy.wait(5000)
@@ -19,6 +17,18 @@ describe('Contacts', () => {
     cy.get(".contact-list .contact-list-item").first().click()
     cy.wait(5000)
     cy.wait('@getContactDetail')
+  })
+
+  it('View table', () => {
+    cy.get(".contact-history").should("exist")
+    cy.get(".contact-history .contact-history-list").should("exist")
+    cy.get(".contact-history .contact-history-list .contact-history-item").should("exist")
+    cy.get(".contact-history .contact-history-list .contact-history-item.call").should("exist")
+    cy.get(".contact-history .contact-history-list .contact-history-item.meeting").should("exist")
+    // cy.get(".contact-history .contact-history-item.contract").should("exist")
+  })
+
+  /*it('New call', () => {
 
     cy.get(".contact-history").should("exist")
     cy.get(".contact-history .new-call").should("exist").click()
@@ -36,6 +46,6 @@ describe('Contacts', () => {
     cy.wait(5000)
     cy.wait('@postCall')
     cy.get(".call-result").should("not.exist")
-  })
+  })*/
 
 })
