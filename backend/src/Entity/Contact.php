@@ -51,7 +51,7 @@ class Contact
     #[ORM\Column(name: "phone_number", length: 9)]
     private string $phoneNumber;
 
-    #[ORM\OneToMany(targetEntity: Call::class, mappedBy: "sender")]
+    #[ORM\OneToMany(targetEntity: Call::class, mappedBy: "receiver")]
     #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private Collection $calls;
 

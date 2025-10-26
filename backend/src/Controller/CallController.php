@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/call')]
 class CallController extends AbstractController
@@ -30,7 +31,7 @@ class CallController extends AbstractController
     }
 
     #[Route('', methods: ['POST'])]
-    public function create(Request $request): JsonResponse
+    public function create(Request $request, SerializerInterface $serializer): JsonResponse
     {
         $user = $this->userRepository->findByToken();
         $data = json_decode($request->getContent(), true);
@@ -62,10 +63,20 @@ class CallController extends AbstractController
         }
 
         $call = $this->callRepository->create($sender, $receiver, $purpose, $successful, $type, $description, $nextCall);
-        return $this->json([ 
-            'call_id' => $call->getId(), 
-            'meeting_id' => $meeting ? $meeting->getId() : null 
-        ], 201);
+
+        $callData = $serializer->normalize($call, context: [
+            'attributes' => [ 'id', 'purpose', 'realizedAt', 'successful', 'description', 'nextCall'],
+            'circular_reference_handler' => fn($o) => $o->getId()
+        ]);
+
+        $meetingData = $serializer->normalize($meeting, context: [
+            'attributes' => ['id', 'appointment', 'place',
+                'participants' => [ 'id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber' ]
+            ],
+            'circular_reference_handler' => fn($o) => $o->getId()
+        ]);
+
+        return $this->json([ 'call' => $callData, 'meeting' => $meetingData ], 201);
     }
 
     #[Route('/{id}', methods: ['PUT'])]

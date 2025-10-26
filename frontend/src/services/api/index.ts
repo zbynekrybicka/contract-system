@@ -14,5 +14,6 @@ export const api = createApi({
       return headers;
     },
   }),
+  tagTypes: [ "Contact" ],
   endpoints: () => ({}),
 });

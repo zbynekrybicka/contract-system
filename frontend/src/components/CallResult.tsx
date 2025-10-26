@@ -25,7 +25,9 @@ export default function CallResult() {
     meetingAppointment,
     place,
     nextCall,
-  } as CallResultForm).then(() => dispatch(showForm(false)));
+  } as CallResultForm).then((result) => {
+    dispatch(showForm(false))
+  });
 
   return (
     <div className="call-result">
