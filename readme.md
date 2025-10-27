@@ -48,7 +48,7 @@ The [API services](frontend/src/services/api) are a contact layer with REST API 
 
 1. `git clone ...`
 2. Execute script `install-backend` in [scripts](scripts)
-3. Check the Adminer on http://localhost:8080 (`appuser:apppass@mysql/contract_system`)
+3. Check the Adminer on http://localhost:8081 (`appuser:apppass@mysql/contract_system`)
 4. Execute script `setup-db` in [scripts](scripts)
 5. Go to [frontend](frontend)
 6. `npm install`
