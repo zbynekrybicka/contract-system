@@ -1,15 +1,27 @@
+.calendar-month {
+
+}
+
 .calendar-week {
     display: flex;
     flex-direction: row;
 }
 
-.calendar-week > div.calendar-day {
-    display: flex;
-    flex-direction: column;
+.calendar-week .calendar-day {
     width: calc(100% / 7);
 }
+.calendar-month .calendar-day {
+    width: calc(100% / 7);
+    border: 1px solid black;
+    border-radius: 5px;
+}
 
-.calendar-week > div.calendar-day > div.calendar-hour {
+.calendar-day {
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-hour {
     border: 1px solid black;
     border-radius: 5px;
 }
