@@ -2,6 +2,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Entity\Contact;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,12 +31,27 @@ class CreateUserCommand extends Command
     {
         $this
             ->addArgument('email', InputArgument::REQUIRED)
-            ->addArgument('password', InputArgument::REQUIRED);
+            ->addArgument('password', InputArgument::REQUIRED)
+            ->addArgument('firstName', InputArgument::REQUIRED)
+            ->addArgument('middleName', InputArgument::REQUIRED)
+            ->addArgument('lastName', InputArgument::REQUIRED)
+            ->addArgument('dialNumber', InputArgument::REQUIRED)
+            ->addArgument('phoneNumber', InputArgument::REQUIRED);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $user = new User($input->getArgument('email'));
+        $contact = new Contact(null, 
+            $input->getArgument("firstName"), 
+            $input->getArgument("middleName"), 
+            $input->getArgument("lastName"), 
+            $input->getArgument("dialNumber"), 
+            $input->getArgument("phoneNumber"), 
+            $input->getArgument("email"), 
+        );
+        $this->em->persist($contact);
+
+        $user = new User($contact);
         $user->setPassword($input->getArgument('password'));
 
         $this->em->persist($user);

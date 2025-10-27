@@ -28,13 +28,14 @@ class User implements UserInterface
 
 
     /**
-     * Email is absolutely necessary
+     * Contact is absolutely necessary
      * 
-     * @param string $email
+     * @param Contact $contact
      */
-    public function __construct(string $email)
+    public function __construct(Contact $contact)
     {
-        $this->email = $email;
+        $this->contact = $contact;
+        $this->email = $contact->getEmail();
     }
 
 
