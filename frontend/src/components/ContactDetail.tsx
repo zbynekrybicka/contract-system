@@ -34,7 +34,7 @@ export default function ContactDetail(): JSX.Element {
 
   return (
     <div className="contact-detail">
-      {isShownEditContactForm && <EditContact contact={contactDetail} />}
+      {isShownEditContactForm && <>{contactDetail && <EditContact contact={contactDetail} handleShowForm={setShownEditContactForm} />}</>}
       {isContactDetailLoading 
         ? <img src={"/src/assets/tube-spinner.svg"} height="100px" />
         : <>{contactDetail && <>

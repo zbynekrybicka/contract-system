@@ -63,18 +63,11 @@ export default function CallResult({ handleShowForm }: Props): JSX.Element {
 
 
     /**
-     * 
-     * @param result CallResultForm
-     * @return Promise<ApiResult>
-     */
-    const [ postCall, { isLoading }] = usePostCallMutation()
-
-
-    /**
      * POST /call
      * 
      * @param data CallResultForm
      */
+    const [ postCall, { isLoading }] = usePostCallMutation()
     const handleSaveCallResult = () => postCall({
         contact_id, 
         purpose,

@@ -1,12 +1,6 @@
-// import { useAppSelector, useAppDispatch } from "../hooks";
-// import { use%APIrequest%Mutation } from "../services/api/%%%Api";
-// import { %storeMethod% } from "../store/%%%Slice";
+import type { JSX } from "react";
 
-export default function Dashboard() {
-//  const dispatch = useAppDispatch()
-//  const [ %apiRequest% ] = use%APIrequest%Mutation()
-
-//  const %storeValue% = useAppSelector(%storeGetter%)
+export default function Dashboard(): JSX.Element {
 
   return (
     <div>
@@ -14,6 +8,7 @@ export default function Dashboard() {
         <div className="inner-content">Dashboard</div>
       </h2>
       <div className="inner-content routes">
+        
       </div>
     </div>
   )

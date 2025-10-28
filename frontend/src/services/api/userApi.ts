@@ -2,6 +2,10 @@ import { api } from '.';
 
 import type { LoginFormData } from '../../store/loginFormSlice';
 
+export type PostLoginResult = {
+  data?: string;
+}
+
 export const userApi = api.injectEndpoints({
   endpoints: (b) => ({
 
