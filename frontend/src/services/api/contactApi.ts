@@ -17,6 +17,7 @@ export const contactApi = api.injectEndpoints({
 
     getContact: b.query<Contact[], {}>({
       query: () => ({ method: 'GET', url: `/contact` }),
+      providesTags: (_err, _res) => [{ type: "Contacts" }]
     }),
 
     getOneContact: b.query<Contact, string>({
@@ -26,6 +27,7 @@ export const contactApi = api.injectEndpoints({
 
     postContact: b.mutation<{id:number}, Partial<NewContactFormData>>({
       query: (body) => ({ method: 'POST', url: '/contact', body }),
+      invalidatesTags: (_res, _err, { }) => [{ type: "Contacts" }]
     }),
 
     putContact: b.mutation<null, [number, Partial<Contact>]>({
