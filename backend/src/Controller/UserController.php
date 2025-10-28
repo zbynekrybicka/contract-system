@@ -3,6 +3,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Repository\ContactRepository;
+use App\Repository\CallRepository;
+use App\Repository\MeetingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,4 +105,28 @@ class UserController extends AbstractController
         // check valid password
         return $user->verifyPassword($password);
     }
+
+
+    /**
+     * GET /user/statistics
+     * Request for get user statistics
+     * Test: getUserStatisticsTest.php
+     * 
+     * @return JsonResponse
+     */
+    #[Route('/user/statistics', name: 'getUserStatistics', methods: ['GET'])]
+    public function getUserStatistics(ContactRepository $contactRepository, CallRepository $callRepository, MeetingRepository $meetingRepository): JsonResponse
+    {
+        $user = $this->userRepository->findByToken();
+        $contactCount = $contactRepository->getCountByContact($user->getContact());
+        $callCount = $callRepository->getCountBySender($user->getContact());
+        $meetingCount = $meetingRepository->getCountByParticipant($user->getContact());
+
+        return $this->json([
+            "contacts" => $contactCount,
+            "calls" => $callCount,
+            "meetings" => $meetingCount
+        ]);
+    }
+
 }
