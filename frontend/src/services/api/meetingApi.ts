@@ -1,10 +1,11 @@
 import { api } from '.';
+import type { Contact } from './contactApi';
 
 export type Meeting = { 
   id: number; 
-  title: string; 
-  startsAt: string; 
-  endsAt: string; 
+  appointment: string; 
+  place: string;
+  participants: Contact[]
 };
 
 

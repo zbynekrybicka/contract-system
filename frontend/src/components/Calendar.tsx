@@ -6,31 +6,49 @@ import CalendarMonth from "./CalendarMonth"
 import CalendarDay from "./CalendarDay"
 import CalendarAll from "./CalendarAll"
 
-enum CalendarType {
-    month = "month",
-    week = "week",
-    day = "day",
-    all = "all"
-}
+
+/** 
+ * CalendarType enum
+ */
+const CalendarType = { 
+    month: "month", 
+    week: "week", 
+    day: "day", 
+    all: "all" 
+} as const;
+type CalendarType = typeof CalendarType[keyof typeof CalendarType];
 
 export default function Calendar() {
 
-    /** GET /meetings */ 
-    const { data: meetingList, isLoading: isMeetingListLoading } = useGetMeetingQuery({})
+    /** 
+     * GET /meetings
+     * 
+     * @const meetingList: Meeting[],
+     * @const isMeetingListLoading boolean
+     */ 
+    const { 
+        data: meetingList = [], 
+        isLoading: isMeetingListLoading 
+    } = useGetMeetingQuery({})
 
-    /** Calendar type */
+
+    /**
+     * Selected calendar type
+     * @const type CalendarType
+     */
     const [ type, setType ] = useState<CalendarType>(CalendarType.week)
 
     return <div>
-        <h2>
-            <div className="inner-content">Calendar</div>
-        </h2>
+        <h2><div className="inner-content">Calendar</div></h2>
         <div className="inner-content route calendar">
+
             <button onClick={() => setType(CalendarType.month)}>Month</button>
             <button onClick={() => setType(CalendarType.week)}>Week</button>
             <button onClick={() => setType(CalendarType.day)}>Day</button>
             <button onClick={() => setType(CalendarType.all)}>All</button>
+
             <hr/>
+
             {isMeetingListLoading ? <img src={"/src/assets/tube-spinner.svg"} height="100px" /> : <>
                 {type === CalendarType.month && <CalendarMonth meetingList={meetingList} />}
                 {type === CalendarType.week && <CalendarWeek meetingList={meetingList} />}
