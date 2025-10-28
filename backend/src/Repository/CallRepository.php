@@ -15,24 +15,42 @@ class CallRepository extends ServiceEntityRepository
     }
 
 
-    public function findOne(int $id): ?array
-    {
-        $row = $this->db->executeQuery(
-            'SELECT * FROM %TableName% WHERE id = :id',
-            ['id' => $id],
-            ['id' => \PDO::PARAM_INT]
-        )->fetchAssociative();
-
-        return $row ?: null;
-    }
-
+    /**
+     * Create Call
+     * @param Contact sender
+     * @param Contact receiver
+     * @param string purpose
+     * @param bool successful
+     * @param string type
+     * @param string description
+     * @param ?\DateTime nextCall
+     * @return Call
+     */
     public function create(Contact $sender, Contact $receiver, string $purpose, bool $successful, string $type, string $description, ?\DateTime $nextCall): Call
     {
+        /**
+         * Create Call Entity
+         */
         $call = new Call($sender, $receiver, $purpose, $successful, $type, $description, $nextCall);
+
+
+        /**
+         * Save Call to Database
+         */
         $this->persistCall($call);
+
+
+        /**
+         * Send Entity
+         */
         return $call;
     }
 
+
+    /**
+     * Save Call
+     * @param Call
+     */
     public function persistCall(Call $item)
     {
         $entityManager = $this->getEntityManager();
@@ -40,6 +58,11 @@ class CallRepository extends ServiceEntityRepository
         $entityManager->flush();
     }
 
+
+    /**
+     * Delete Call
+     * @param Call
+     */
     public function deleteCall(Call $item)
     {
         $entityManager = $this->getEntityManager();

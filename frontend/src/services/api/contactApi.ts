@@ -1,17 +1,16 @@
 import { api } from '.';
-import type { NewContactFormData } from '../../store/newContactFormSlice';
 import type { Call } from './callApi';
 import type { Meeting } from './meetingApi';
 
 export type Contact = { 
-  id: number; 
-  firstName: string; 
-  middleName: string;
-  lastName: string;
-  dialNumber: number; 
-  phoneNumber: string;
-  email: string;
-  calls: Call[],
+  id: number
+  firstName: string
+  middleName: string
+  lastName: string
+  dialNumber: number
+  phoneNumber: string
+  email: string
+  calls: Call[]
   meetings: Meeting[]
 };
 
@@ -29,7 +28,7 @@ export const contactApi = api.injectEndpoints({
       providesTags: (_err, _res, id) => [{ type: "Contact", id }]
     }),
 
-    postContact: b.mutation<{id:number}, Partial<NewContactFormData>>({
+    postContact: b.mutation<{id:number}, Partial<Contact>>({
       query: (body) => ({ method: 'POST', url: '/contact', body }),
       invalidatesTags: (_res, _err, { }) => [{ type: "Contacts" }]
     }),

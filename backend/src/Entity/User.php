@@ -11,17 +11,32 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface
 {
+    /**
+     * ID
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+
+    /**
+     * Email
+     */
     #[ORM\Column(length: 180)]
     private string $email;
 
+
+    /**
+     * Password
+     */
     #[ORM\Column]
     private ?string $password = null;
 
+
+    /**
+     * Contact
+     */
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
     private Contact $contact;
@@ -40,6 +55,7 @@ class User implements UserInterface
 
 
     /**
+     * ID
      * 
      * @return ?int
      */
@@ -50,12 +66,24 @@ class User implements UserInterface
 
 
     /**
+     * Email
      * 
      * @return string
      */
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+
+    /**
+     * Contact
+     * 
+     * @return Contact
+     */
+    public function getContact(): Contact
+    {
+        return $this->contact;
     }
 
 
@@ -84,25 +112,33 @@ class User implements UserInterface
     }
 
 
+    /**
+     * Roles
+     * Data for Auth Token
+     * 
+     * @return string[]
+     */
     public function getRoles(): array
     {
         return ['ROLE_USER'];
     }
 
-    public function eraseCredentials(): void
-    {
 
-    }
-
-    public function getUserIdentifier(): string
+    /**
+     * ID
+     * Data for Auth Token
+     * 
+     * @return int
+     */
+    public function getUserIdentifier(): int
     {
         return strval($this->getId());
     }
 
 
-    public function getContact(): Contact
-    {
-        return $this->contact;
-    }
+    /**
+     * 
+     */
+    public function eraseCredentials(): void {}
 
 }

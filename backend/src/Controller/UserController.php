@@ -31,36 +31,56 @@ class UserController extends AbstractController
      * @return JsonResponse
      */
     #[Route('/login', name: 'login', methods: ['POST'])]
-    public function login(Request $request, 
+    public function login(
+        Request $request, 
         JWTTokenManagerInterface $jwtManager
     ): JsonResponse 
     {
-        // get POST data
+        /**
+         * get POST data
+         */
         $data = json_decode($request->getContent(), true);
 
-        // check POST data
+        
+        /**
+         * check POST data
+         */
         $isInputDataCorrect = $this->login_checkInputData($data);
         if (!$isInputDataCorrect) {
             return $this->json(null, 400);
         }
 
-        // set login data for control
+        
+        /**
+         * set login data for control
+         */ 
         $email = $data['email'];
         $password = $data['password'];        
 
-        // find user
+        
+        /*
+         * find user
+         */
         $user = $this->userRepository->findByEmail($email);
 
-        // check password
+        
+        /**
+         * check password
+         */ 
         $isPasswordCorrect = $this->passwordVerify($user, $password);
         if (!$isPasswordCorrect) {
             return $this->json(null, 401);
         }
 
-        // set auth token
+        /**
+         * set auth token
+         */
         $token = $jwtManager->create($user);
 
-        // successful result
+
+        /**
+         * successful result
+         */
         return $this->json($token);
     }
 
@@ -74,12 +94,17 @@ class UserController extends AbstractController
      */
     private function login_checkInputData(array $data): bool
     {
-        // set results of the conditions
+        /**
+         * set results of the conditions
+         */
         $isDataArray = is_array($data);
         $isEmailEmpty = strlen($data['email']) === 0;
         $isPasswordEmpty = strlen($data['password']) === 0;
         
-        // send result
+        
+        /**
+         * send result 
+         */
         return $isDataArray && !$isEmailEmpty && !$isPasswordEmpty; 
     }
 
@@ -94,12 +119,17 @@ class UserController extends AbstractController
      */
     private function passwordVerify(?User $user, string $password): bool
     {
-        // check valid user
+        /**
+         * check valid user
+         */
         if (!$user) {
             return false;
         }
 
-        // check valid password
+
+        /**
+         * check valid password
+         */
         return $user->verifyPassword($password);
     }
 }

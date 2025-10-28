@@ -15,16 +15,12 @@ class ContactRepository extends ServiceEntityRepository
         parent::__construct($registry, Contact::class);
     }
 
-    public function getAll(): array
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select("contact")
-            ->from("\App\Entity\Contact", "contact")
-            ->getQuery()
-            ->getResult();
-    }
 
-
+    /**
+     * Get Contacts By Superior
+     * @param Contact superior
+     * @return Contact[]
+     */
     public function getBySuperior(Contact $superior): array
     {
         return $this->getEntityManager()->createQueryBuilder()
@@ -37,20 +33,12 @@ class ContactRepository extends ServiceEntityRepository
     }
 
 
-    public function findById(int $id): ?array
-    {
-        $row = $this->getEntityManager()->createQueryBuilder()
-            ->select("contact")
-            ->from("\App\Entity\Contact", "contact")
-            ->andWhere("contact.id = :contactId")
-            ->setParameter("contactId", $id)
-            ->getQuery()
-            ->getAssociativeArray();
-
-        return $row ?: null;
-    }
-
-
+    /**
+     * Find One Contact With Superior
+     * @param Contact superior
+     * @param int contactId
+     * @return ?Contact
+     */
     public function findWithSuperior(Contact $superior, int $contactId): ?Contact
     {
         return $this->getEntityManager()->createQueryBuilder()
@@ -63,28 +51,43 @@ class ContactRepository extends ServiceEntityRepository
             ->getQuery()->getOneOrNullResult();
     }
 
-    public function newContact(): Contact
-    {
-        return new Contact();
-    }
 
-    public function insert(Contact $superior, array $data): Contact
+    /**
+     * Create New Contact Entity
+     * @param Contact superior
+     * @param string firstName
+     * @param string middleName
+     * @param string lastName
+     * @param int dialNumber
+     * @param string phoneNumber
+     * @param string email
+     * @return Contact
+     */
+    public function insert(Contact $superior, string $firstName, string $middleName, string $lastName, int $dialNumber, string $phoneNumber, string $email): Contact
     {
-        $entityManager = $this->getEntityManager();
-        $contact = new Contact($superior, ...$data);
-        $entityManager->persist($contact);
-        $entityManager->flush();
+        $contact = new Contact($superior, $firstName, $middleName, $lastName, $dialNumber, $phoneNumber, $email);
+        $this->persistContact($contact);
         return $contact;
     }
 
-    public function update(Contact $contact)
+
+    /**
+     * Update Contact
+     * @param Contact contact
+     */
+    public function persistContact(Contact $contact)
     {
         $entityManager = $this->getEntityManager();
         $entityManager->persist($contact);
         $entityManager->flush();
     }
 
-    public function delete(Contact $contact)
+
+    /**
+     * Delete Contact
+     * @param Contact contact
+     */
+    public function deleteContact(Contact $contact)
     {
         $entityManager = $this->getEntityManager();
         $entityManager->remove($contact);

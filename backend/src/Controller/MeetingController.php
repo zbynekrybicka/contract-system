@@ -17,18 +17,39 @@ class MeetingController extends AbstractController
     private $userRepository;
     private $meetingRepository;
 
-    public function __construct(UserRepository $userRepository, MeetingRepository $meetingRepository)
-    {
+    public function __construct(
+        UserRepository $userRepository, 
+        MeetingRepository $meetingRepository
+    ) {
         $this->userRepository = $userRepository;
         $this->meetingRepository = $meetingRepository;
     }
 
 
+    /**
+     * GET /meeting
+     * Request for get list of meeting with user participant
+     * Test: getMeetingTest.php
+     * @return JsonResponse
+     */
     #[Route('', methods: ['GET'])]
     public function getAll(): JsonResponse
     {
+        /**
+         * Find User By Token
+         */
         $user = $this->userRepository->findByToken();
+
+
+        /**
+         * Get Meeting List
+         */
         $meetingList = $this->meetingRepository->findByContact($user->getContact());
+
+
+        /**
+         * Return result in structure
+         */
         return $this->json($meetingList, 200, [], [
             'attributes' => [
                 'id', 'appointment', 'place',
@@ -37,7 +58,7 @@ class MeetingController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', methods: ['GET'])]
+    /*#[Route('/{id}', methods: ['GET'])]
     public function getOne(): JsonResponse
     {
         $meetingList = $meetingrepository->findAll();
@@ -66,6 +87,6 @@ class MeetingController extends AbstractController
     {
         $meetingrepository->delete($meeting);
         return $this->json(null, 204);
-    }
+    }*/
 
 }
