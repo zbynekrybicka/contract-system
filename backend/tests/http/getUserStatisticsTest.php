@@ -1,33 +1,30 @@
 <?php
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+require __DIR__ . '/ApiTestCase.php';
 
-final class GetUserStatisticsTest extends WebTestCase {
+final class GetUserStatisticsTest extends ApiTestCase {
 
     /**
      * @dataProvider dataGetUserStatistics
      */
-    public function testGetUserStatistics(): void
+    public function testGetUserStatistics(int $result): void
     {
-        // HTTP client
-        $client = static::createClient();
-
-        // Data
-        $data = [
-        ];
-
         // HTTP Request
-        $client->request("GET", "/user/statistics", [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($data));
+        static::$client->request("GET", "/user/statistics", [], [], ['CONTENT_TYPE' => 'application/json']);
         
         // Response control
-        // $this->assertContains($client->getResponse()->getStatusCode(), [401]);
+        $statusCode = static::$client->getResponse()->getStatusCode();
+        $this->assertSame($statusCode, $result);
+        if ($statusCode === 200) {
+            dump(static::$client->getResponse()->getContent());
+        }
     }
 
     public static function dataGetUserStatistics(): array 
     {
         return [
-
+            [200]
         ];
     }
 

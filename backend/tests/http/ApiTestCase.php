@@ -19,4 +19,10 @@ class ApiTestCase extends WebTestCase {
         self::$client->setServerParameter('HTTP_Authorization', 'Bearer '. json_decode($token));
     }
 
+
+    protected static function getKernelClass(): string
+    {  
+        return \App\Kernel::class;
+    }
+
 }
