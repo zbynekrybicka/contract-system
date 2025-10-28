@@ -15,18 +15,11 @@ class MeetingRepository extends ServiceEntityRepository
     }
 
 
-    public function findOne(int $id): ?array
-    {
-        $row = $this->db->executeQuery(
-            'SELECT * FROM %TableName% WHERE id = :id',
-            ['id' => $id],
-            ['id' => \PDO::PARAM_INT]
-        )->fetchAssociative();
-
-        return $row ?: null;
-    }
-
-
+    /**
+     * Find Meeting By Contact
+     * @param Contact contact
+     * @return Contact[]
+     */
     public function findByContact(Contact $contact): array
     {
         return $this->getEntityManager()->createQueryBuilder()
@@ -37,6 +30,12 @@ class MeetingRepository extends ServiceEntityRepository
             ->getQuery()->getResult();
     }
 
+
+    /**
+     * Get Count of Meetings By Participant
+     * @param Contact participant
+     * @return int
+     */
     public function getCountByParticipant(Contact $participant): int
     {
         return $this->getEntityManager()->createQueryBuilder()
@@ -47,6 +46,14 @@ class MeetingRepository extends ServiceEntityRepository
             ->getQuery()->getSingleScalarResult();
     }
 
+
+    /**
+     * Create Meeting
+     * @param Contact[] participants
+     * @param \DateTimeImmutable appointment
+     * @param string place
+     * @return Meeting
+     */
     public function create(array $participants, \DateTimeImmutable $appointment, string $place): Meeting
     {
         $meeting = new Meeting($participants, $appointment, $place);
@@ -54,6 +61,11 @@ class MeetingRepository extends ServiceEntityRepository
         return $meeting;
     }
 
+    
+    /**
+     * Persist Meeting
+     * @param Meeting item
+     */
     public function persistMeeting(Meeting $item)
     {
         $entityManager = $this->getEntityManager();
@@ -61,6 +73,11 @@ class MeetingRepository extends ServiceEntityRepository
         $entityManager->flush();
     }
 
+    
+    /**
+     * Delete Meeting
+     * @param Meeting item
+     */
     public function deleteMeeting(Meeting $item)
     {
         $entityManager = $this->getEntityManager();

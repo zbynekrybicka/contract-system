@@ -1,8 +1,15 @@
 import { api } from '.';
-import type { CallResultForm } from '../../store/callResultFormSlice';
+import type { Contact } from './contactApi';
 
 export type Call = { 
-  id: number; 
+  id: number
+  sender: Contact
+  receiver: Contact
+  purpose: string
+  realizedAt: string
+  successful: boolean
+  description: string
+  nextCall: string | null
 };
 
 
@@ -10,9 +17,9 @@ export const callApi = api.injectEndpoints({
 
   endpoints: (b) => ({
 
-    postCall: b.mutation<{id:number}, Partial<CallResultForm>>({
+    postCall: b.mutation<{id:number}, Partial<Call>>({
       query: (body) => ({ method: 'POST', url: '/call', body }),
-      invalidatesTags: (_res, _err, { contact_id }) => [{ type: "Contact", id: contact_id }]
+      invalidatesTags: (_res, _err, { receiver }) => [{ type: "Contact", id: receiver?.id }]
     }),
 
     putCall: b.mutation<null, Partial<Call>>({

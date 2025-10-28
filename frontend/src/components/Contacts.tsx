@@ -1,27 +1,65 @@
-import { useGetContactQuery } from '../services/api/contactApi';
-import { useAppDispatch, useAppSelector } from '../hooks.ts';
-import { isShownForm, showForm } from '../store/newContactFormSlice.ts';
+import { useGetContactQuery, type Contact } from '../services/api/contactApi';
 import NewContact from './NewContact.tsx'
+import { useState, type JSX } from 'react';
 
 export default function Contacts() {
-  const dispatch = useAppDispatch()
+
+  /**
+   * @var contactList Contact[]
+   * @var isContactListLoading boolean
+   */
   const { data: contactList, isLoading: isContactListLoading } = useGetContactQuery({});
-  const isShownNewContact = useAppSelector(isShownForm)
+
+
+  /**
+   * Is Shown New Contact
+   */
+  const [isShownNewContact, setShowNewContact ] = useState<boolean>(false)
+
+  /**
+   * Show New Contact Form
+   */
+  const handleNewContact: () => void = () => setShowNewContact(true)
+
+
+  /**
+   * @param contact Contact
+   * @returns JSX.Element
+   */
+  const contactItem: (contact: Contact) => JSX.Element = contact => {
+
+    /**
+     * ID
+     * First Name
+     * Middle Name
+     * Last Name
+     * Dial Number
+     * Phone Number
+     * Email
+     */
+    const id: number = contact.id
+    const firstName: string = contact.firstName
+    const middleName: string = contact.middleName
+    const lastName: string = contact.lastName
+    const dialNumber: number = contact.dialNumber
+    const phoneNumber: string = contact.phoneNumber
+    const email: string = contact.email
+
+    return <div className="contact-list-item" key={id} onClick={() => location.href = "/contacts/" + id}>
+      <div>{firstName} {middleName} {lastName}</div>
+      <div>{dialNumber}{phoneNumber}</div>
+      <div>{email}</div>
+    </div>
+  }
 
   return (
     <div>
-      {isShownNewContact && <NewContact />}
+      {isShownNewContact && <NewContact handleShowForm={setShowNewContact} />}
       <h2><div className="inner-content">Contacts</div></h2>
       <div className="inner-content routes">
-        <button className="button-new-contact" onClick={() => dispatch(showForm(true))}>New contact</button>
-        <div className="contact-list">
-          {isContactListLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> 
-            : contactList?.map(contact => <div className="contact-list-item" key={contact.id} onClick={() => location.href = "/contacts/" + contact.id}>
-            <div>{contact.firstName} {contact.middleName} {contact.lastName}</div>
-            <div>{contact.dialNumber}{contact.phoneNumber}</div>
-            <div>{contact.email}</div>
-          </div>)}
-        </div>
+        <button className="button-new-contact" onClick={handleNewContact}>New contact</button>
+        <hr/>
+        <div className="contact-list">{isContactListLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> : contactList?.map(contactItem)}</div>
       </div>
     </div>
   );

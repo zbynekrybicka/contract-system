@@ -1,57 +1,115 @@
 import { DateTime } from "luxon"
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ChangeEvent, type JSX } from "react"
+import type { Meeting } from "../services/api/meetingApi"
+import { distributeAppointments } from "../helpers/distributeAppointments"
+import type { Contact } from "../services/api/contactApi"
 
-export default function CalendarDay({ meetingList })
+type Props = {
+    meetingList: Meeting[]
+}
+
+export default function CalendarDay({ meetingList }: Props): JSX.Element
 {
-    const [ day, setDay ] = useState(DateTime.now().toISODate())
+    /**
+     * Selected day in calendar
+     * Default day in form
+     * Handler day
+     */
+    const [ day, setDay ] = useState<DateTime>(DateTime.now().startOf("day"))
+    const dayDefaultValue: string | undefined = day.toISODate() || undefined
+    const handleSelectDay: (event: ChangeEvent<HTMLInputElement>) => void = e => setDay(DateTime.fromISO(e.target.value).startOf("day"))
 
-    const dayStart = DateTime.fromISO(day).startOf("day")
 
-    const distributeAppointments = () => {
-        for (const meeting of meetingList) {
+    /**
+     * When day is changed or window resized
+     */
+    distributeAppointments(meetingList, useEffect, [day])
 
-            const appointment = DateTime.fromISO(meeting.appointment)
-            const calendarSelector = '.calendar-interval[data-timestamp="' + appointment.toLocal() + '"]'
-            const calendarElement = document.querySelector(calendarSelector)
 
-            const meetingSelector = '.calendar-event.meeting[data-meeting-id="' + meeting.id + '"]'
-            const meetingElement = document.querySelector(meetingSelector)
+    /**
+     * 
+     * @param meeting Meeting
+     * @returns boolean
+     */
+    const meetingFilter: (meeting: Meeting) => boolean = (meeting) => {
+        /**
+         * meeting appointment
+         */
+        const appointment = DateTime.fromISO(meeting.appointment).toISODate()
 
-            if (meetingElement && calendarElement) {
-                meetingElement.style.left = calendarElement?.offsetLeft + "px"
-                meetingElement.style.top = calendarElement?.offsetTop + "px"
-                meetingElement.style.width = calendarElement?.offsetWidth + "px"
-            }
-
-            // console.log([meeting.appointment, appointment, calendarSelector, meetingSelector, calendarElement, meetingElement, innerWidth])
-        }
+        return appointment === day.toISODate()
     }
 
-    useEffect(distributeAppointments, [day])
-    window.addEventListener("resize", distributeAppointments)
 
+    const meetingCell: (meeting: Meeting) => JSX.Element = (meeting) => {
+
+        /**
+         * Meeting appointment
+         * Meeting ID
+         * Readable appointment
+         */
+        const appointment = DateTime.fromISO(meeting.appointment)
+        const meetingId = meeting.id
+        const readableAppointment = appointment.toFormat('dd.MM HH:mm')
+
+
+        /**
+         * Participant element
+         */
+        const participantElement: (participant: Contact) => JSX.Element = (participant) => {
+            /**
+             * Participant ID
+             * Participant last name
+             */
+            const participantId = participant.id
+            const lastName = participant.lastName
+
+            return <div key={participantId}>{lastName}</div>
+        }
+
+        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>
+            {readableAppointment}
+            {meeting.participants.map(participantElement)}
+        </div>
+    }
+
+
+    /**
+     * 
+     * @param _null undefined
+     * @param hour number
+     * @returns JSX.Element
+     */
+    const hourCell: (_null: any, hour: number) => JSX.Element = (_null, hour) => {
+
+        /**
+         * Invisible quarter row
+         * 
+         * @param minutes number
+         * @returns JSX.Element
+         */
+        const minutesRow: (minutes: number) => JSX.Element = (minutes: number) => {
+
+            /**
+             * Calendar time
+             * timestamp for attach event
+             * key
+             */
+            const calendarTime = day.plus({ hours: hour, minutes })
+            const timestamp: string = calendarTime.toFormat("HH:mm")
+            const key = hour * 60 + minutes
+
+            return <div key={key} className="calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
+        }
+
+        return <div key={hour} className="calendar-hour">{[0, 15, 30, 45].map(minutesRow)}</div>
+    }
 
     return <div>
         <div className="row">
-            <input type="date" defaultValue={day} onChange={e => setDay(e.target.value)} />
+            <input type="date" defaultValue={dayDefaultValue} onChange={handleSelectDay} />
         </div>
-        <div className="calendar-day">
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23].map((hour: number) => <div key={hour} className="calendar-hour">
-                {[0, 15, 30, 45].map((minutes: number) => {
-                    const calendarTime = dayStart.plus({ hours: hour, minutes })
-                    return <div key={hour * 60 + minutes} className="calendar-interval" data-timestamp={calendarTime.toLocal()}>&nbsp;</div>
-                })}
-            </div>)}            
-        </div>
-        {meetingList.filter(meeting => {
-            const appointment = DateTime.fromISO(meeting.appointment).toISODate()
-            return appointment === day
-        }).map(meeting => {
-            const appointment = DateTime.fromISO(meeting.appointment)
-            return <div className="calendar-event meeting" key={meeting.id} data-meeting-id={meeting.id}>
-                {appointment.toFormat('dd.MM HH:mm')}
-                {meeting.participants.map(participant => <div key={participant.id}>{participant.lastName}</div>)}
-            </div>
-        })}
+        <div className="calendar-day">{new Array(24).fill(null).map(hourCell)}</div>
+        {meetingList.filter(meetingFilter).map(meetingCell)}
     </div>
 }

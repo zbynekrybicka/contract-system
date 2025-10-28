@@ -1,20 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import auth from './authSlice';
-import loginForm from './loginFormSlice'
-import newContactForm from './newContactFormSlice'
-import editContactForm from './editContactFormSlice'
-import callResultForm from './callResultFormSlice'
 import { api } from '../services/api';
 
 export const rootReducer = combineReducers({
-    /**
-     * Here register new reducers
-     */
+  /**
+   * Here register new reducers
+   */
   auth,
-  loginForm,
-  newContactForm,
-  editContactForm,
-  callResultForm,
   [api.reducerPath]: api.reducer,
 });
 

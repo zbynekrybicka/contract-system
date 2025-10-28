@@ -1,6 +1,14 @@
 import { api } from '.';
 
-import type { LoginFormData } from '../../store/loginFormSlice';
+type LoginFormData = {
+  email: string
+  password: string
+  rememberMe: boolean
+};
+
+export type PostLoginResult = {
+  data?: string;
+}
 
 export const userApi = api.injectEndpoints({
   endpoints: (b) => ({
@@ -11,11 +19,7 @@ export const userApi = api.injectEndpoints({
     }),
 
     postLogin: b.mutation<string, LoginFormData>({
-      query: (body) => ({ 
-        method: 'POST', 
-        url: '/login', 
-        body 
-      }),
+      query: (body) => ({ method: 'POST', url: '/login', body }),
     }),
 
   }),

@@ -26,29 +26,72 @@ class ContactController extends AbstractController
     private $userRepository;
     private $contactRepository;
 
-    public function __construct(UserRepository $userRepository, ContactRepository $contactRepository) 
-    {
+    public function __construct(
+        UserRepository $userRepository, 
+        ContactRepository $contactRepository
+    ) {
         $this->userRepository = $userRepository;
         $this->contactRepository = $contactRepository;
     }
 
+
+    /**
+     * GET /contact
+     * Request for get all contacts from user
+     */
     #[Route('', methods: ['GET'])]
-    public function getAll(ContactRepository $contactRepository): JsonResponse
+    public function getAll(): JsonResponse
     {
+        /**
+         * Get User By Auth Token
+         */
         $user = $this->userRepository->findByToken();
-        $contactList = $contactRepository->getBySuperior($user->getContact());
-        return $this->json($contactList, 200, [], [ 'attributes' => [
-            'id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber'
-        ]]);
+
+
+        /**
+         * Get Contact List By User
+         */
+        $superior = $user->getContact();
+        $contactList = $this->contactRepository->getBySuperior($superior);
+
+
+        /**
+         * Send result in structure
+         */
+        return $this->json($contactList, 200, [], [ 'attributes' => ['id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber']]);
     }
 
 
+    /**
+     * GET /contact/:id
+     * Request for get one contact with all details
+     * @param int id
+     * @return JsonResponse
+     */
     #[Route('/{id}', methods: ['GET'])]
-    public function getOne(ContactRepository $contactRepository, int $id): JsonResponse
+    public function getOne(int $id): JsonResponse
     {
+        /**
+         * Get User By Auth Token
+         */
         $user = $this->userRepository->findByToken();
-        $contact = $contactRepository->findWithSuperior($user->getContact(), $id);
+
+        /**
+         * Find Contact Entity
+         */
+        $superior = $user->getContact();
+        $contact = $this->contactRepository->findWithSuperior($superior, $id);
+
+
+        /**
+         * Result of finding
+         */
         if ($contact) {
+
+            
+            /**
+             * Send Entity in structure
+             */
             return $this->json($contact, 200, [], [ 
                 'attributes' => [ 
                     'id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber', 
@@ -60,50 +103,144 @@ class ContactController extends AbstractController
                 ],
                 AON::CIRCULAR_REFERENCE_HANDLER => fn ($o) => [ 'id' => $o->getId() ],
             ]);
+
+
         } else {
+
+            
+            /**
+             * Send Error
+             */
             return $this->json(null, 400);
         }
     }
 
 
+    /**
+     * POST /contact
+     * Request For Create New Contact
+     * @param Request request
+     * @return JsonResponse
+     */
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        /**
+         * Get User By Auth Token
+         */
         $user = $this->userRepository->findByToken();
-        $contact = $this->contactRepository->insert($user->getContact(), $data);
+
+
+        /**
+         * Extract Data From Request
+         */
+        $data = json_decode($request->getContent(), true);
+
+        
+        /**
+         * Create Contact
+         */
+        $superior = $user->getContact();
+        $contact = $this->contactRepository->insert($superior, $data);
+
+
+        /**
+         * Send Result
+         */
         return $this->json($contact->getId(), 201);
     }
 
 
+    /**
+     * PUT /contact/:id
+     * Request For Update Contact Data
+     * @param Request request
+     * @param int contactId
+     * @return JsonResponse
+     */
     #[Route('/{contactId}', methods: ['PUT'])]
     public function update(Request $request, int $contactId): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        /**
+         * Get User By Auth Token
+         */
         $user = $this->userRepository->findByToken();
-        $superior = $user->getContact();
 
+
+        /**
+         * Get Data From Request
+         */
+        $data = json_decode($request->getContent(), true);
+
+
+        /**
+         * Get Selected Contact
+         */
+        $user->getContact();
         $contact = $this->contactRepository->findWithSuperior($superior, $contactId);
+        /**
+         * If Contact Not Found, Send Error
+         */
         if (!$contact) {
             return $this->json(null, 401);
         }
 
-        $contact->hydrate(...$data);
-        $this->contactRepository->update($contact);
+
+        /**
+         * Update Contact
+         */
+        $firstName = $data['firstName'];
+        $middleName = $data['middleName'];
+        $lastName = $data['lastName'];
+        $dialNumber = $data['dialNumber'];
+        $phoneNumber = $data['phoneNumber'];
+        $email = $data['email'];
+        $contact->hydrate($firstName, $middleName, $lastName, $dialNumber, $phoneNumber, $email);
+        $this->contactRepository->persistContact($contact);
+
+
+        /**
+         * Send Positive Result
+         */
         return $this->json(null, 204);
     }
 
 
+    /**
+     * DELETE /contact/:id
+     * Request For Delete Contact
+     * @param int contactId
+     * @return JsonResponse
+     */
     #[Route('/{contactId}', methods: ['DELETE'])]
     public function delete(int $contactId): JsonResponse
     {
+        /**
+         * Get User By Auth Token
+         */
         $user = $this->userRepository->findByToken();
+
+
+        /**
+         * Find Contact By Superior
+         */
         $superior = $user->getContact();
         $contact = $this->contactRepository->findWithSuperior($superior, $contactId);
+
+
+        /**
+         * If Contact Is Found
+         */
         if ($contact) {
+            /**
+             * Delete Contact
+             */
             $this->contactRepository->delete($contact);
             return $this->json(null, 204);
         } else {
+            /**
+             * Else Send Error
+             */
             return $this->json(null, 400);
         }
     }

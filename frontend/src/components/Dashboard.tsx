@@ -1,6 +1,7 @@
+import type { JSX } from "react";
 import Statistics from "./Statistics";
 
-export default function Dashboard() {
+export default function Dashboard(): JSX.Element {
 
   return (
     <div>
