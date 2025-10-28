@@ -3,7 +3,6 @@ namespace App\Tests\Controller;
 
 require __DIR__ . '/ApiTestCase.php';
 
-
 final class PostContactTest extends ApiTestCase {
 
     /**

@@ -79,7 +79,7 @@ class ContactRepository extends ServiceEntityRepository
      * @param string email
      * @return Contact
      */
-    public function insert(Contact $superior, string $firstName, string $middleName, string $lastName, int $dialNumber, string $phoneNumber, string $email): Contact
+    public function create(Contact $superior, string $firstName, string $middleName, string $lastName, int $dialNumber, string $phoneNumber, string $email): Contact
     {
         $contact = new Contact($superior, $firstName, $middleName, $lastName, $dialNumber, $phoneNumber, $email);
         $this->persistContact($contact);

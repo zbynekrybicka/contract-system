@@ -40,7 +40,7 @@ final class PutContactTest extends ApiTestCase {
                     "dialNumber" => 420, 
                     "phoneNumber" => "123456789", 
                     "email" => "vaclav.tomanec" . time(). "@gmail.com"
-                ], 401
+                ], 400
             ]
         ];
     }

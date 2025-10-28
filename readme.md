@@ -39,9 +39,7 @@ The [API services](frontend/src/services/api) are a contact layer with REST API 
 - [Store](frontend/src/store) - centralized state management and direct access to application data
 - [Services/API](frontend/src/services/api) - modules responsible for sending HTTP methods
 
-- [Components tests](frontend/tests/components) - Cypress tests for checking React components with store provider. (They don't call any API requests)
-- [Store tests](frontend/tests/store) - Unit tests for checking getters and setters in all reducers
-- [E2E](frontend/tests/e2e) - End-to-end tests veryfying complete application functionality
+- [E2E](frontend/cypress/e2e) - End-to-end tests veryfying complete application functionality
 
 
 ## First install

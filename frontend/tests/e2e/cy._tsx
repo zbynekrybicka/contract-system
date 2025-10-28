@@ -1,5 +1,0 @@
-describe('%Section%', () => {
-  it('%Action%', () => {
-    cy.visit('http://localhost:%port%')
-  })
-})

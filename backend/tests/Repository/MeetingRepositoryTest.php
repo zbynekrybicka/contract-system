@@ -1,166 +1,80 @@
 <?php
 namespace App\Tests\Repository;
 
-use App\Entity\MeetingEntity;
+use App\Entity\Meeting;
 use App\Repository\MeetingRepository;
 
 final class MeetingRepositoryTest extends DatabaseTestCase
 {
     /**
-     * @dataProvider dataGetByContact
+     * @dataProvider dataFindByContact
      */
-    public function testGetByContact(): void
+    public function testFindByContact(): void
     {
         /** @var MeetingRepository $meetingRepository */
         $meetingRepository = static::getContainer()->get(MeetingRepository::class);
 
-        /** @var MeetingEntity $meeting */
-        $meeting = $meetingRepository->getByContact();
+        /** @var Meeting[] $meetingList */
+        $meetingList = $meetingRepository->findByContact();
 
         // Final check
         // $this->assertNotNull();
         // $this->assertSame();
     }
 
-    public static function dataGetByContact(): array
+    public static function dataFindByContact(): array
     {
         return [
         ];
     }
 
     
+    
     /**
-     * @dataProvider dataGetAll
+     * @dataProvider dataCreate
      */
-    public function testGetAll(): void
+    public function testCreate(): void
     {
         /** @var MeetingRepository $meetingRepository */
         $meetingRepository = static::getContainer()->get(MeetingRepository::class);
 
-        /** @var MeetingEntity $meeting */
-        $meeting = $meetingRepository->getAll();
+        /** @var Meeting $meeting */
+        $meeting = $meetingRepository->create();
 
         // Final check
         // $this->assertNotNull();
         // $this->assertSame();
     }
 
-    public static function dataGetAll(): array
+    public static function dataCreate(): array
     {
         return [
         ];
     }
 
     
-    /**
-     * @dataProvider dataGetOne
-     */
-    public function testGetOne(): void
-    {
-        /** @var MeetingRepository $meetingRepository */
-        $meetingRepository = static::getContainer()->get(MeetingRepository::class);
 
-        /** @var MeetingEntity $meeting */
-        $meeting = $meetingRepository->getOne();
 
-        // Final check
-        // $this->assertNotNull();
-        // $this->assertSame();
-    }
 
-    public static function dataGetOne(): array
-    {
-        return [
-        ];
-    }
+
 
     
     /**
-     * @dataProvider dataInsert
+     * @dataProvider dataGetCountByParticipant
      */
-    public function testInsert(): void
+    public function testGetCountByParticipant(): void
     {
         /** @var MeetingRepository $meetingRepository */
         $meetingRepository = static::getContainer()->get(MeetingRepository::class);
 
-        /** @var MeetingEntity $meeting */
-        $meeting = $meetingRepository->insert();
+        /** @var Meeting $meeting */
+        $meeting = $meetingRepository->getCountByParticipant();
 
         // Final check
         // $this->assertNotNull();
         // $this->assertSame();
     }
-
-    public static function dataInsert(): array
-    {
-        return [
-        ];
-    }
-
-    
-    /**
-     * @dataProvider dataUpdate
-     */
-    public function testUpdate(): void
-    {
-        /** @var MeetingRepository $meetingRepository */
-        $meetingRepository = static::getContainer()->get(MeetingRepository::class);
-
-        /** @var MeetingEntity $meeting */
-        $meeting = $meetingRepository->update();
-
-        // Final check
-        // $this->assertNotNull();
-        // $this->assertSame();
-    }
-
-    public static function dataUpdate(): array
-    {
-        return [
-        ];
-    }
-
-    
-    /**
-     * @dataProvider dataDelete
-     */
-    public function testDelete(): void
-    {
-        /** @var MeetingRepository $meetingRepository */
-        $meetingRepository = static::getContainer()->get(MeetingRepository::class);
-
-        /** @var MeetingEntity $meeting */
-        $meeting = $meetingRepository->delete();
-
-        // Final check
-        // $this->assertNotNull();
-        // $this->assertSame();
-    }
-
-    public static function dataDelete(): array
-    {
-        return [
-        ];
-    }
-
-    
-    /**
-     * @dataProvider dataGetCountByUser
-     */
-    public function testGetCountByUser(): void
-    {
-        /** @var MeetingRepository $meetingRepository */
-        $meetingRepository = static::getContainer()->get(MeetingRepository::class);
-
-        /** @var MeetingEntity $meeting */
-        $meeting = $meetingRepository->getCountByUser();
-
-        // Final check
-        // $this->assertNotNull();
-        // $this->assertSame();
-    }
-
-    public static function dataGetCountByUser(): array
+    public static function dataGetCountByParticipant(): array
     {
         return [
         ];

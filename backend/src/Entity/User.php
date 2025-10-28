@@ -128,9 +128,9 @@ class User implements UserInterface
      * ID
      * Data for Auth Token
      * 
-     * @return int
+     * @return string
      */
-    public function getUserIdentifier(): int
+    public function getUserIdentifier(): string
     {
         return strval($this->getId());
     }
