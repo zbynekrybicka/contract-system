@@ -10,13 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 // #[ORM\Entity(repositoryClass: ContractRepository::class)]
-#[ORM\Table(
-    name: 'contract',
-    // indexes: [new ORM\Index(name: 'idx_%TableName%_%Column%', columns: ['%Column%'])],
-    // uniqueConstraints: [new ORM\UniqueConstraint(name: 'uniq_%TableName%_%Column%', columns: ['%Column%'])]
-)]
-// #[UniqueEntity(fields: ['%Column%'], message: '%Column% already used.')]
-// #[ORM\HasLifecycleCallbacks]
+#[ORM\Table(name: 'contract')]
 final class Contract
 {
     #[ORM\Id]

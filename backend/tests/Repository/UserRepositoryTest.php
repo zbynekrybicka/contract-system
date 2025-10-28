@@ -25,7 +25,6 @@ final class UserRepositoryTest extends DatabaseTestCase
             $this->assertNull($user);
         }
     }
-
     public static function dataFindByEmail(): array
     {
         return [
@@ -33,6 +32,9 @@ final class UserRepositoryTest extends DatabaseTestCase
             ["a@b.cz", false]
         ];
     }
+
+
+
 
 
     /**
@@ -51,7 +53,6 @@ final class UserRepositoryTest extends DatabaseTestCase
         $this->assertSame($user->getId(), $id);
         $this->assertSame($user->getContact()->getId(), $contactId);
     }
-
     public static function dataFind(): array
     {
         return [
@@ -59,4 +60,23 @@ final class UserRepositoryTest extends DatabaseTestCase
         ];
     }
 
+
+
+
+
+
+    
+    /**
+     * @dataProvider dataFindByToken
+     */
+    public function testFindByToken() 
+    {
+        /** @var UserRepository $userRepository */
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+    }
+    public static function dataFindByToken()
+    {
+        return [];
+    }
 }

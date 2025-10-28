@@ -42,6 +42,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
 
+
+    /**
+     * Find By Token
+     * @return ?User
+     */
     public function findByToken(): ?User {
         $token = $this->tokenStorage->getToken();
         $decodedToken = $this->jwtManager->decode($token);
@@ -50,18 +55,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
 
-    /*public function findById($userId): ?User
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select("u")
-            ->from("\App\Entity\User", "u")
-            ->andWhere("id = :id")
-            ->setParameter("id", $userId)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }*/
-
-
+    /**
+     * Find By Email
+     * @param string email
+     * @return ?User
+     */
     public function findByEmail(string $email): ?User
     {
         return $this->getEntityManager()->createQueryBuilder()

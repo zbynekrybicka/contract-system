@@ -7,6 +7,23 @@ use App\Repository\ContactRepository;
 
 final class ContactRepositoryTest extends DatabaseTestCase
 {
+    /**
+     * @dataProvider dataGetBySuperior
+     */
+    public function testGetBySuperior() 
+    {
+        /** @var ContactRepository $contactRepository */
+        $contactRepository = static::getContainer()->get(ContactRepository::class);
+
+    }
+    public static function dataGetBySuperior()
+    {
+        return [];
+    }
+
+
+
+
 
 
     /**
@@ -37,98 +54,53 @@ final class ContactRepositoryTest extends DatabaseTestCase
         ];
     }
 
-// 
-//     
-//     /**
-//      * @dataProvider dataInsert
-//      */
-//     public function testInsert(): void
-//     {
-//         /** @var ContactRepository $contactRepository */
-//         $contactRepository = static::getContainer()->get(ContactRepository::class);
-// 
-//         /** @var ContactEntity $contact */
-//         $contact = $contactRepository->insert();
-// 
-//         // Final check
-//         // $this->assertNotNull();
-//         // $this->assertSame();
-//     }
-// 
-//     public static function dataInsert(): array
-//     {
-//         return [
-//         ];
-//     }
-// 
-//     
-//     /**
-//      * @dataProvider dataUpdate
-//      */
-//     public function testUpdate(): void
-//     {
-//         /** @var ContactRepository $contactRepository */
-//         $contactRepository = static::getContainer()->get(ContactRepository::class);
-// 
-//         /** @var ContactEntity $contact */
-//         $contact = $contactRepository->update();
-// 
-//         // Final check
-//         // $this->assertNotNull();
-//         // $this->assertSame();
-//     }
-// 
-//     public static function dataUpdate(): array
-//     {
-//         return [
-//         ];
-//     }
-// 
-//     
-//     /**
-//      * @dataProvider dataDelete
-//      */
-//     public function testDelete(): void
-//     {
-//         /** @var ContactRepository $contactRepository */
-//         $contactRepository = static::getContainer()->get(ContactRepository::class);
-// 
-//         /** @var ContactEntity $contact */
-//         $contact = $contactRepository->delete();
-// 
-//         // Final check
-//         // $this->assertNotNull();
-//         // $this->assertSame();
-//     }
-// 
-//     public static function dataDelete(): array
-//     {
-//         return [
-//         ];
-//     }
-// 
-//     
-//     /**
-//      * @dataProvider dataGetCountByUser
-//      */
-//     public function testGetCountByUser(): void
-//     {
-//         /** @var ContactRepository $contactRepository */
-//         $contactRepository = static::getContainer()->get(ContactRepository::class);
-// 
-//         /** @var ContactEntity $contact */
-//         $contact = $contactRepository->getCountByUser();
-// 
-//         // Final check
-//         // $this->assertNotNull();
-//         // $this->assertSame();
-//     }
-// 
-//     public static function dataGetCountByUser(): array
-//     {
-//         return [
-//         ];
-//     }
-// 
-//     
+    
+
+
+
+
+
+    
+
+    /**
+     * @dataProvider dataGetCountByContact
+     */
+    public function testGetCountByContact() 
+    {
+        /** @var ContactRepository $contactRepository */
+        $contactRepository = static::getContainer()->get(ContactRepository::class);
+
+    }
+    public static function dataGetCountByContact()
+    {
+        return [];
+    }
+   
+
+
+
+
+
+    
+
+    /**
+     * @dataProvider dataCreate
+     */
+    public function testCreate() 
+    {
+        /** @var ContactRepository $contactRepository */
+        $contactRepository = static::getContainer()->get(ContactRepository::class);
+
+    }
+    public static function dataCreate()
+    {
+        return [];
+    }
+
+
+
+
+
+
+
 }
