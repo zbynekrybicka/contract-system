@@ -1,46 +1,136 @@
 import { DateTime } from "luxon";
-import { useAppSelector, useAppDispatch } from "../hooks";
-import { isShownForm as getIsShownCallResultForm, showForm as showCallResultForm } from "../store/callResultFormSlice";
 import CallResult from "./CallResult"
 import ContactHistoryCall from "./ContactHistoryCall";
 import ContactHistoryMeeting from "./ContactHistoryMeeting";
-import { useState } from "react";
+import { useState, type ChangeEvent, type JSX } from "react";
+import type { Contact } from "../services/api/contactApi";
+import type { Call } from "../services/api/callApi";
+import type { Meeting } from "../services/api/meetingApi";
 
-export default function ContactHistory({ contact }) {
-  const dispatch = useAppDispatch()
+type Props = {
+  contact: Contact
+}
 
-  const [ start, setStart ] = useState(DateTime.now().plus({weeks: -1}).startOf("week").toISO())
-  const [ end, setEnd ] = useState(DateTime.now().endOf("week").toISO())
+type ContactHistoryItem = {
+  tag: string;
+  datetime: DateTime;
+  item: Call | Meeting;
+}
 
-  const isShownCallResultForm = useAppSelector(getIsShownCallResultForm)
-  const contactHistory: any[] = [
-    ...[ ...contact.calls.map((call: any) => ({...call, tag: "call", datetime: DateTime.fromISO(call.realizedAt).toISO() })) ],
-    ...[ ...contact.meetings.map((meeting: any) => ({...meeting, tag: "meeting", datetime: DateTime.fromISO(meeting.appointment).toISO() })) ],
-  ].filter(item => {
-    // console.log(start, end, item.datetime, item.datetime >= start, item.dateTime <= end)
-    // console.log(item.datetime, end, item.datetime >= start, item.datetime <= end, (item.datetime >= start) && (item.datetime <= end))
-    return (item.datetime >= start) && (item.datetime <= end)
-  }).sort((a, b) => a.datetime > b.datetime ? 1 : -1);
+export default function ContactHistory({ contact }: Props): JSX.Element {
+
+  /**
+   * Start of interval
+   * End of interval
+   * Is Shown Call Result Form
+   */
+  const [ start, setStart ] = useState<DateTime>(DateTime.now().plus({weeks: -1}).startOf("week"))
+  const [ end, setEnd ] = useState<DateTime>(DateTime.now().endOf("week"))
+  const [ isShownCallResultForm, setShowCallResultForm ] = useState<boolean>(false)
+
+
+  /**
+   * Readable Start of interval
+   * Readable End of interval
+   */
+  const readableStart = start.toISODate() || undefined
+  const readableEnd = end.toISODate() || undefined
+
+
+  /**
+   * Show Form New Call
+   * Set Start
+   * Set End
+   */
+  const handleNewCall: () => void = () => setShowCallResultForm(true)
+  const handleSetStart: (event: ChangeEvent<HTMLInputElement>) => void = e => setStart(DateTime.fromISO(e.target.value).startOf("day"))
+  const handleSetEnd: (event: ChangeEvent<HTMLInputElement>) => void = e => setEnd(DateTime.fromISO(e.target.value).endOf("day"))
+
+
+  /**
+   * @param call Call
+   * @returns ContactHistoryItem
+   */
+  const encapsulateCall: (call: Call) => ContactHistoryItem = (call: Call) => ({
+    tag: "call", 
+    datetime: DateTime.fromISO(call.realizedAt),
+    item: call
+  })
+
+
+  /**
+   * @param meeting Meeting
+   * @returns ContactHistoryItem
+   */
+  const encapsulateMeeting: (meeting: Meeting) => ContactHistoryItem = (meeting: Meeting) => ({
+    tag: "meeting", 
+    datetime: DateTime.fromISO(meeting.appointment),
+    item: meeting
+  })
+
+
+  /**
+   * @param item ContactHistoryItem
+   * @returns boolean
+   */
+  const contactHistoryFilter: (contactHistoryItem: ContactHistoryItem) => boolean = item => {
+    // console.log(start, end, item.datetime, item.datetime >= start, item.datetime <= end)
+    return item.datetime >= start && item.datetime <= end
+  }
+
+
+  /**
+   * @param a ContactHistoryItem
+   * @param b ContactHistoryItem
+   * @returns number
+   */
+  const contactHistorySort: (item1: ContactHistoryItem, item2: ContactHistoryItem) => number = (a, b) => a.datetime > b.datetime ? 1 : -1
+
+
+  /**
+   * @param item ContactHistoryItem
+   * @param index number
+   * @returns JSX.Element
+   */
+  const contactHistoryItem: (item: ContactHistoryItem, index: number) => JSX.Element = (item, index) => {
+
+    /**
+     * ClassName
+     * Is Call
+     * IS Meeting
+     */
+    const className: string = ["contact-history-item", item.tag].join(" ")
+    const isCall = item.tag === "call"
+    const isMeeting = item.tag === "meeting"
+
+    return <div className={className} key={index}>
+      {isCall && <ContactHistoryCall call={item.item as Call} />}
+      {isMeeting && <ContactHistoryMeeting meeting={item.item as Meeting} />}
+    </div>
+  }
+
+
+  /**
+   * Contact History List
+   */
+  const contactHistory: JSX.Element = <>{[ 
+    ...contact.calls.map(encapsulateCall), 
+    ...contact.meetings.map(encapsulateMeeting) 
+  ].filter(contactHistoryFilter).sort(contactHistorySort).map(contactHistoryItem)}</>
 
 
   return (
     <div className="contact-history">
-        {isShownCallResultForm && <CallResult />}
+        {isShownCallResultForm && <CallResult handleShowForm={setShowCallResultForm} />}
         <h3>Contact history</h3>
-
-        <button className="new-call" onClick={() => dispatch(showCallResultForm(true))}>Call to contact</button>
+        <button className="new-call" onClick={handleNewCall}>Call to contact</button>
 
         <div className="row">
-          <input type="date" defaultValue={DateTime.fromISO(start).toISODate() as string} onChange={e => setStart(e.target.value)} />
-          <input type="date" defaultValue={DateTime.fromISO(end).toISODate() as string} onChange={e => setEnd(e.target.value)} />
+          <input type="date" defaultValue={readableStart} onChange={handleSetStart} />
+          <input type="date" defaultValue={readableEnd} onChange={handleSetEnd} />
         </div>
 
-        <div className="contact-history-list">
-          {contactHistory.map((item: any, index) => <div className={["contact-history-item", item.tag].join(" ")} key={index}>
-            {item.tag === "call" && <ContactHistoryCall call={item} />}
-            {item.tag === "meeting" && <ContactHistoryMeeting meeting={item} />}
-          </div>)}
-        </div>
+        <div className="contact-history-list">{contactHistory}</div>
     </div>
   )
 }

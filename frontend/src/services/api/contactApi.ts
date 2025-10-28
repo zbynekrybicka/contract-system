@@ -1,5 +1,7 @@
 import { api } from '.';
 import type { NewContactFormData } from '../../store/newContactFormSlice';
+import type { Call } from './callApi';
+import type { Meeting } from './meetingApi';
 
 export type Contact = { 
   id: number; 
@@ -9,6 +11,8 @@ export type Contact = {
   dialNumber: number; 
   phoneNumber: string;
   email: string;
+  calls: Call[],
+  meetings: Meeting[]
 };
 
 export const contactApi = api.injectEndpoints({

@@ -1,9 +1,29 @@
 import { api } from '.';
-import type { CallResultForm } from '../../store/callResultFormSlice';
+import type { Contact } from './contactApi';
 
 export type Call = { 
-  id: number; 
+  id: number;
+  sender: Contact;
+  receiver: Contact;
+  purpose: string;
+  realizedAt: string;
+  successful: boolean;
+  description: string;
+  nextCall: string | null;
 };
+
+export type CallResultForm = {
+    contact_id: number;
+    purpose: string;
+    realizedAt: string;
+    successful: boolean;
+    type: string;
+    description: string;
+    meetingAppointment: string | null;
+    place: string;
+    nextCall: string | null;
+}
+
 
 
 export const callApi = api.injectEndpoints({
