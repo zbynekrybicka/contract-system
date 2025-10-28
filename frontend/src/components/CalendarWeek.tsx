@@ -1,61 +1,141 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, type JSX } from "react"
 import { DateTime } from "luxon"
+import type { Meeting } from "../services/api/meetingApi"
+import { distributeAppointments } from "../helpers/distributeAppointments"
+import type { Contact } from "../services/api/contactApi"
 
-export default function CalendarWeek({ meetingList })
+type Props = {
+    meetingList: Meeting[]
+}
+
+export default function CalendarWeek({ meetingList }: Props): JSX.Element
 {
+    /**
+     * Selected week
+     * Begin of selected interval
+     * End of selected interval
+     * Readable start
+     * Readable end
+     * Handle previous week
+     * Handle next week
+     * Handle current week
+     */
     const [ week, setWeek ] = useState(0)
+    const mondayStart = DateTime.now().plus({ weeks: week }).startOf("week")
+    const sundayEnd = mondayStart.endOf("week")
+    const readableMondayStart: string = mondayStart.toFormat("dd. MM.")
+    const readableSundayEnd: string = sundayEnd.toFormat("dd. MM. yyyy")
+    const handlePrevWeek: () => void = () => setWeek(week - 1)
+    const handleNextWeek: () => void = () => setWeek(week + 1)
+    const handleCurrentWeek: () => void = () => setWeek(0)
 
-    const now = DateTime.now()
-    const thisMonday = now.set({ weekday: 1 }).startOf("day")
-    const mondayStart = thisMonday.plus({ days: week * 7 })
-    const sundayEnd = mondayStart.plus({ days: 6, hours: 23, minutes: 59 })
+    /**
+     * When day is changed or window resized
+     */
+    distributeAppointments(meetingList, useEffect, [week])
 
-    const distributeAppointments = () => {
-        for (const meeting of meetingList) {
 
-            const appointment = DateTime.fromISO(meeting.appointment)
-            const calendarSelector = '.calendar-interval[data-timestamp="' + appointment.toLocal() + '"]'
-            const calendarElement = document.querySelector(calendarSelector)
+    /**
+     * 
+     * @param _null null
+     * @param index number
+     * @returns JSX.Element
+     */
+    const dayColumn: (_null: null, index: number) => JSX.Element = (_null, index) => {
 
-            const meetingSelector = '.calendar-event.meeting[data-meeting-id="' + meeting.id + '"]'
-            const meetingElement = document.querySelector(meetingSelector)
+        /**
+         * 
+         * @param _null null
+         * @param hour number
+         * @returns JSX.Element
+         */
+        const hourCell: (_null: null, hour: number) => JSX.Element = (_null, hour: number) => {
 
-            if (meetingElement && calendarElement) {
-                meetingElement.style.left = calendarElement?.offsetLeft + "px"
-                meetingElement.style.top = calendarElement?.offsetTop + "px"
-                meetingElement.style.width = calendarElement?.offsetWidth + "px"
+            /**
+             * 
+             * @param minutes number
+             * @returns JSX.Element
+             */
+            const minutesRow: (minutes: number) => JSX.Element = (minutes: number) => {
+
+                /**
+                 * timestamp
+                 * key
+                 */
+                const timestamp = mondayStart.plus({ days: index, hours: hour, minutes }).toLocal()
+                const key = hour * 60 + minutes
+
+                return <div key={key} className="calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
             }
 
-            // console.log([meeting.appointment, appointment, calendarSelector, meetingSelector, calendarElement, meetingElement, innerWidth])
+            return <div key={hour} className="calendar-hour">{[0, 15, 30, 45].map(minutesRow)}</div>
         }
+
+        return <div className="calendar-day" key={index}>{new Array(24).fill(null).map(hourCell)}</div>
     }
 
-    useEffect(distributeAppointments, [week])
-    window.addEventListener("resize", distributeAppointments)
+
+    /**
+     * 
+     * @param meeting Meeting
+     * @returns boolean
+     */
+    const meetingFilter: (meeting: Meeting) => boolean = (meeting) => {
+        /**
+         * Meeting appointment
+         */
+        const appointment = DateTime.fromISO(meeting.appointment)
+
+        return appointment >= mondayStart && appointment <= sundayEnd
+    }
+
+
+    const meetingCell: (meeting: Meeting) => JSX.Element = meeting => {
+
+        /**
+         * Meeting appointment
+         * Meeting ID
+         * Readable appointment
+         */
+        const appointment = DateTime.fromISO(meeting.appointment)
+        const meetingId = meeting.id
+        const readableAppointment = appointment.toFormat('dd.MM HH:mm')
+
+        /**
+         * 
+         * @param participant Contact
+         * @returns JSX.Element
+         */
+        const participantRow: (participant: Contact) => JSX.Element = (participant) => {
+
+            /**
+             * Participant ID
+             * Last name
+             */
+            const participantId = participant.id
+            const lastName = participant.lastName
+
+            return <div key={participantId}>{lastName}</div>
+        }
+
+        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>
+            {readableAppointment}
+            {meeting.participants.map(participantRow)}
+        </div>
+    }
+
 
     return <div>
         <div className="row">
-            <button onClick={() => setWeek(week - 1)}>&lt;&lt;&lt;</button> {mondayStart.toFormat("dd. MM.")} <button onClick={() => setWeek(0)}>NOW</button> {sundayEnd.toFormat("dd. MM. yyyy")} <button onClick={() => setWeek(week + 1)}>&gt;&gt;&gt;</button>
+            <button onClick={handlePrevWeek}>&lt;&lt;&lt;</button>
+            {readableMondayStart}
+            <button onClick={handleCurrentWeek}>NOW</button>
+            {readableSundayEnd} 
+            <button onClick={handleNextWeek}>&gt;&gt;&gt;</button>
         </div>
         <div className="calendar-week">
-            {["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].map((day: string, index: number) => <div className="calendar-day" key={index}>
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23].map((hour: number) => <div key={hour} className="calendar-hour">
-                    {[0, 15, 30, 45].map((minutes: number) => {
-                        const calendarTime = mondayStart.plus({ days: index, hours: hour, minutes })
-                        return <div key={hour * 60 + minutes} className="calendar-interval" data-timestamp={calendarTime.toLocal()}>&nbsp;</div>
-                    })}
-                </div>)}
-            </div>)}
-            {meetingList.filter(meeting => {
-                const appointment = DateTime.fromISO(meeting.appointment)
-                return appointment >= mondayStart && appointment <= sundayEnd
-            }).map(meeting => {
-                const appointment = DateTime.fromISO(meeting.appointment)
-                return <div className="calendar-event meeting" key={meeting.id} data-meeting-id={meeting.id}>
-                    {appointment.toFormat('dd.MM HH:mm')}
-                    {meeting.participants.map(participant => <div key={participant.id}>{participant.lastName}</div>)}
-                </div>
-            })}
+            {new Array(7).fill(null).map(dayColumn)}
+            {meetingList.filter(meetingFilter).map(meetingCell)}
         </div>
     </div>
 }
