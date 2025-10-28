@@ -6,8 +6,8 @@ export const userApi = api.injectEndpoints({
   endpoints: (b) => ({
 
 
-    getUserStatistics: b.query<Object, number>({
-      query: (id) => ({ method: 'GET', url: `/user/${id}/statistics` })
+    getUserStatistics: b.query<Object, null>({
+      query: () => ({ method: 'GET', url: `/user/statistics` })
     }),
 
     postLogin: b.mutation<string, LoginFormData>({
