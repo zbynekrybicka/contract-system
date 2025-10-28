@@ -53,6 +53,22 @@ class ContactRepository extends ServiceEntityRepository
 
 
     /**
+     * Get Count of Contacts By Superior
+     * @param Contact superior
+     * @return int
+     */
+    public function getCountByContact(Contact $superior): int
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("COUNT(DISTINCT contact.id)")
+            ->from(Contact::class, "contact")
+            ->andWhere("contact.superior = :superior")
+            ->setParameter("superior", $superior)
+            ->getQuery()->getSingleScalarResult();
+    }
+
+
+    /**
      * Create New Contact Entity
      * @param Contact superior
      * @param string firstName

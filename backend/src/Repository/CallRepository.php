@@ -16,6 +16,22 @@ class CallRepository extends ServiceEntityRepository
 
 
     /**
+     * Get Count Of Calls By Sender
+     * @param Contact sender
+     * @return int
+     */
+    public function getCountBySender(Contact $sender): int
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("COUNT(DISTINCT call.id)")
+            ->from(Call::class, "call")
+            ->andWhere("call.sender = :sender")
+            ->setParameter("sender", $sender)
+            ->getQuery()->getSingleScalarResult();
+    }
+
+
+    /**
      * Create Call
      * @param Contact sender
      * @param Contact receiver

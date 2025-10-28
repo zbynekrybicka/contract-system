@@ -32,6 +32,22 @@ class MeetingRepository extends ServiceEntityRepository
 
 
     /**
+     * Get Count of Meetings By Participant
+     * @param Contact participant
+     * @return int
+     */
+    public function getCountByParticipant(Contact $participant): int
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("COUNT(DISTINCT meeting.id)")
+            ->from(Meeting::class, "meeting")
+            ->andWhere(":participant MEMBER OF meeting.participants")
+            ->setParameter("participant", $participant)
+            ->getQuery()->getSingleScalarResult();
+    }
+
+
+    /**
      * Create Meeting
      * @param Contact[] participants
      * @param \DateTimeImmutable appointment
