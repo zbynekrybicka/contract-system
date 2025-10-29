@@ -14,16 +14,18 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
      * Selected day in calendar
      * Default day in form
      * Handler day
+     * Timestamp Format
      */
     const [ day, setDay ] = useState<DateTime>(DateTime.now().startOf("day"))
     const dayDefaultValue: string | undefined = day.toISODate() || undefined
     const handleSelectDay: (event: ChangeEvent<HTMLInputElement>) => void = e => setDay(DateTime.fromISO(e.target.value).startOf("day"))
+    const timestampFormat: string = "yyyy-MM-dd-HH-mm"
 
 
     /**
      * When day is changed or window resized
      */
-    distributeAppointments(meetingList, useEffect, [day])
+    distributeAppointments(meetingList, useEffect, [day], timestampFormat)
 
 
     /**
@@ -96,7 +98,7 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
              * key
              */
             const calendarTime = day.plus({ hours: hour, minutes })
-            const timestamp: string = calendarTime.toFormat("HH:mm")
+            const timestamp: string = calendarTime.toFormat(timestampFormat)
             const key = hour * 60 + minutes
 
             return <div key={key} className="calendar-interval" data-timestamp={timestamp}>&nbsp;</div>

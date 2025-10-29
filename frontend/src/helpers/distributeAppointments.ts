@@ -9,13 +9,13 @@ type UseEffect = typeof useEffect
  * @param meetingList 
  * @returns () => void
  */
-export function distributeAppointments(meetingList: Meeting[], hook: UseEffect, dependency: any[]): void {
+export function distributeAppointments(meetingList: Meeting[], hook: UseEffect, dependency: any[], timestampFormat: string): void {
 
     const handleDistributeAppointments = () => {
         for (const meeting of meetingList) {
 
             const appointment = DateTime.fromISO(meeting.appointment)
-            const calendarSelector = '.calendar-interval[data-timestamp="' + appointment.toLocal() + '"]'
+            const calendarSelector = '.calendar-interval[data-timestamp="' + appointment.toFormat(timestampFormat) + '"]'
             const calendarElement: HTMLElement | null = document.querySelector(calendarSelector)
 
             const meetingSelector = '.calendar-event.meeting[data-meeting-id="' + meeting.id + '"]'

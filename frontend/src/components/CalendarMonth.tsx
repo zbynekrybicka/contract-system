@@ -20,13 +20,17 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
      * First day of selected interval
      * Last day of selected interval
      * Count of weeks (usually 6, sometimes 5)
+     * Timestamp Format
      * Handle previous month
      * Handle next month
      * Handle current month
+     * Readable First Day
+     * Readable Last Day
      */
     const firstDay: DateTime = DateTime.now().startOf("month").plus({ months: month }).startOf("week")
     const lastDay: DateTime = firstDay.plus({ months: 1 }).endOf("week")
     const countOfWeeks: number = Math.floor((lastDay.toMillis() - firstDay.toMillis()) / 1000 / 3600 / 24 / 7 )
+    const timestampFormat: string = "yyyy-MM-dd"
     const handlePrevMonth: () => void = () => setMonth(month - 1)
     const handleNextMonth: () => void = () => setMonth(month + 1)
     const handleCurrentMonth: () => void = () => setMonth(0)
@@ -37,7 +41,7 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
     /**
      * When day is changed or window resized
      */
-    distributeAppointments(meetingList, useEffect, [month])
+    distributeAppointments(meetingList, useEffect, [month], timestampFormat)
 
 
     /**
@@ -91,10 +95,10 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
              * Timestamp for attach calendar events
              * key
              */
-            const timestamp: string | null = firstDay.plus({ weeks: weekIndex, days: dayIndex }).toISODate() 
+            const timestamp: string | null = firstDay.plus({ weeks: weekIndex, days: dayIndex }).toFormat(timestampFormat) 
             const key = weekIndex + "-" + dayIndex
 
-            return <div key={key} className="calendar-day" data-timestamp={timestamp}>&nbsp;</div>
+            return <div key={key} className="calendar-day calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
         }
 
         return <div className="calendar-week" key={weekIndex}>{new Array(7).fill(null).map(dayCell)}</div>
