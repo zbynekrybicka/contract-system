@@ -16,6 +16,7 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
      * End of selected interval
      * Readable start
      * Readable end
+     * Timestamp Format
      * Handle previous week
      * Handle next week
      * Handle current week
@@ -25,6 +26,7 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
     const sundayEnd = mondayStart.endOf("week")
     const readableMondayStart: string = mondayStart.toFormat("dd. MM.")
     const readableSundayEnd: string = sundayEnd.toFormat("dd. MM. yyyy")
+    const timestampFormat: string = "yyyy-MM-dd-HH-mm"
     const handlePrevWeek: () => void = () => setWeek(week - 1)
     const handleNextWeek: () => void = () => setWeek(week + 1)
     const handleCurrentWeek: () => void = () => setWeek(0)
@@ -32,7 +34,7 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
     /**
      * When day is changed or window resized
      */
-    distributeAppointments(meetingList, useEffect, [week])
+    distributeAppointments(meetingList, useEffect, [week], timestampFormat)
 
 
     /**
@@ -62,7 +64,7 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
                  * timestamp
                  * key
                  */
-                const timestamp = mondayStart.plus({ days: index, hours: hour, minutes }).toLocal()
+                const timestamp = mondayStart.plus({ days: index, hours: hour, minutes }).toFormat(timestampFormat)
                 const key = hour * 60 + minutes
 
                 return <div key={key} className="calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
