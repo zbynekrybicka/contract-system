@@ -128,7 +128,7 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
 
 
     return <div>
-        <div className="row">
+        <div className="white-box">
             <button onClick={handlePrevWeek}>&lt;&lt;&lt;</button>
             {readableMondayStart}
             <button onClick={handleCurrentWeek}>NOW</button>

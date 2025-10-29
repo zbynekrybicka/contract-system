@@ -108,7 +108,7 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
     }
 
     return <div>
-        <div className="row">
+        <div className="white-box">
             <input type="date" defaultValue={dayDefaultValue} onChange={handleSelectDay} />
         </div>
         <div className="calendar-day">{new Array(24).fill(null).map(hourCell)}</div>

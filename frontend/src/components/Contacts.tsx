@@ -45,7 +45,7 @@ export default function Contacts() {
     const phoneNumber: string = contact.phoneNumber
     const email: string = contact.email
 
-    return <div className="contact-list-item" key={id} onClick={() => location.href = "/contacts/" + id}>
+    return <div className="row active contact-list-item" key={id} onClick={() => location.href = "/contacts/" + id}>
       <div>{firstName} {middleName} {lastName}</div>
       <div>{dialNumber}{phoneNumber}</div>
       <div>{email}</div>
@@ -57,9 +57,20 @@ export default function Contacts() {
       {isShownNewContact && <NewContact handleShowForm={setShowNewContact} />}
       <h2><div className="inner-content">Contacts</div></h2>
       <div className="inner-content routes">
-        <button className="button-new-contact" onClick={handleNewContact}>New contact</button>
-        <hr/>
-        <div className="contact-list">{isContactListLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> : contactList?.map(contactItem)}</div>
+        <div className="white-box">
+          <button className="button-new-contact" onClick={handleNewContact}>New contact</button>
+        </div>
+        <div className="white-box">
+          <h3>Your contacts</h3>
+          <div className="contact-list table">
+            <div className="row header">
+              <div className="table-label">Full name</div>
+              <div className="table-label">Phone number</div>
+              <div className="table-label">E-mail</div>
+            </div>
+            {isContactListLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> : contactList?.map(contactItem)}
+          </div>
+        </div>
       </div>
     </div>
   );

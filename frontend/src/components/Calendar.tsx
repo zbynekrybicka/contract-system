@@ -42,12 +42,12 @@ export default function Calendar() {
         <h2><div className="inner-content">Calendar</div></h2>
         <div className="inner-content route calendar">
 
-            <button onClick={() => setType(CalendarType.month)}>Month</button>
-            <button onClick={() => setType(CalendarType.week)}>Week</button>
-            <button onClick={() => setType(CalendarType.day)}>Day</button>
-            <button onClick={() => setType(CalendarType.all)}>All</button>
-
-            <hr/>
+            <div className="white-box">
+                <button onClick={() => setType(CalendarType.month)}>Month</button>
+                <button onClick={() => setType(CalendarType.week)}>Week</button>
+                <button onClick={() => setType(CalendarType.day)}>Day</button>
+                <button onClick={() => setType(CalendarType.all)}>All</button>
+            </div>
 
             {isMeetingListLoading ? <img src={"/src/assets/tube-spinner.svg"} height="100px" /> : <>
                 {type === CalendarType.month && <CalendarMonth meetingList={meetingList} />}
