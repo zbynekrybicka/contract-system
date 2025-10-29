@@ -1,0 +1,44 @@
+.white-box {
+    background-color: #FFF;
+    padding: 25px;
+    margin-top: 25px;
+}
+
+.white-box h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+.white-box .table {
+    display: table;
+    flex-direction: column;
+}
+
+.white-box .table .row {
+    display: table-row;
+}
+
+.white-box .table .row .table-label {
+    font-weight: bold;
+}
+
+.white-box .table .row div {
+    display: table-cell;
+    padding: 15px;
+}
+
+.white-box .table .row:nth-child(odd) {
+    background-color: #EEE;
+}
+
+.white-box .table .row.header {
+    background-color: #000;
+    color: #FFF;
+    font-weight: bold;
+}
+
+.white-box .table .row.active:hover {
+    background-color: #FFE;
+    cursor: pointer;
+}
+

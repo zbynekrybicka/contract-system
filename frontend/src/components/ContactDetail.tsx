@@ -39,12 +39,12 @@ export default function ContactDetail(): JSX.Element {
 
   return (
     <div className="contact-detail">
-      {isShownEditContactForm && <>{contactDetail && <EditContact contact={contactDetail} handleShowForm={setShownEditContactForm} />}</>}
-      {isShownCallResultForm && <CallResult handleShowForm={setShowCallResultForm} />}
+      {isShownEditContactForm && contactDetail && <EditContact contact={contactDetail} handleShowForm={setShownEditContactForm} />}
+      {isShownCallResultForm && contactDetail && <CallResult contact={contactDetail} handleShowForm={setShowCallResultForm} />}
 
       {isContactDetailLoading 
         ? <img src={"/src/assets/tube-spinner.svg"} height="100px" />
-        : <>{contactDetail && <>
+        : contactDetail && <>
           <h2><div className="inner-content">{firstName} {middleName} {lastName}</div></h2>
           <div className="inner-content route">
             <div className="white-box">
@@ -53,7 +53,7 @@ export default function ContactDetail(): JSX.Element {
             </div>
             <ContactHistory contact={contactDetail} />
           </div>
-        </>}</>}
+        </>}
     </div>
   )
 }
