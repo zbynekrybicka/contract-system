@@ -76,7 +76,7 @@ export default function CallResult({ handleShowForm }: Props): JSX.Element {
         description,
         meetingAppointment: meetingAppointment?.toISO(),
         place,
-        nextCall: nextCall?.toISO()
+        nextCall: nextCall?.toISO() || null
     }).then(() => handleShowForm(false));
 
   return (

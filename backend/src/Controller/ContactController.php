@@ -141,7 +141,13 @@ class ContactController extends AbstractController
          * Create Contact
          */
         $superior = $user->getContact();
-        $contact = $this->contactRepository->insert($superior, $data);
+        $firstName = $data['firstName'];
+        $middleName = $data['middleName'];
+        $lastName = $data['lastName'];
+        $dialNumber = $data['dialNumber'];
+        $phoneNumber = $data['phoneNumber'];
+        $email = $data['email'];
+        $contact = $this->contactRepository->create($superior, $firstName, $middleName, $lastName, $dialNumber, $phoneNumber, $email);
 
 
         /**
