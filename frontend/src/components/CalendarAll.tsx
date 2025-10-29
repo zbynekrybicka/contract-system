@@ -77,28 +77,28 @@ export default function CalendarAll({ meetingList }: Props)
             return <div key={participantId}>{lastName}</div>
         }
 
-        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>
-            {readableAppointment}
-            {meeting.participants.map(participantElement)}
+        return <div className="row" key={meetingId} data-meeting-id={meetingId}>
+            <div>{readableAppointment}</div>
+            <div>{meeting.participants.map(participantElement)}</div>
         </div>
     }
 
     return <div>
 
-        {/**
-          * Interval selection control 
-          */}
-        <div className="row">
+        <div className="white-box">
             <input type="date" defaultValue={startDefaultValue} onChange={handleSelectStart} />
             <input type="date" defaultValue={endDefaultValue} onChange={handleSelectEnd} />
         </div>
 
-
-        {/**
-          * List of meetings
-          */}
-        <div className="calendar-all">
-            {meetingList.filter(meetingFilter).map(meetingCell)}            
+        <div className="calendar-all white-box">
+            <h3>All events</h3>
+            <div className="table">
+                <div className="row header">
+                    <div>Appointment</div>
+                    <div>Participants</div>
+                </div>
+                {meetingList.filter(meetingFilter).map(meetingCell)}
+            </div>
         </div>
     </div>
 }

@@ -105,7 +105,7 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
     }
 
     return <div>
-        <div className="row">
+        <div className="white-box">
             <button onClick={handlePrevMonth}>&lt;&lt;&lt;</button>
             {readableFirstDay}
             <button onClick={handleCurrentMonth}>NOW</button>

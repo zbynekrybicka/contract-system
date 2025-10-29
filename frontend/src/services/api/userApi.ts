@@ -6,6 +6,13 @@ type LoginFormData = {
   rememberMe: boolean
 };
 
+
+export type UserStatistics = {
+  contacts: number
+  calls: number
+  meetings: number
+}
+
 export type PostLoginResult = {
   data?: string;
 }
@@ -14,7 +21,7 @@ export const userApi = api.injectEndpoints({
   endpoints: (b) => ({
 
 
-    getUserStatistics: b.query<Object, null>({
+    getUserStatistics: b.query<UserStatistics, null>({
       query: () => ({ method: 'GET', url: `/user/statistics` })
     }),
 

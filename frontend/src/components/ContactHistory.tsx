@@ -1,5 +1,4 @@
 import { DateTime } from "luxon";
-import CallResult from "./CallResult"
 import ContactHistoryCall from "./ContactHistoryCall";
 import ContactHistoryMeeting from "./ContactHistoryMeeting";
 import { useState, type ChangeEvent, type JSX } from "react";
@@ -22,11 +21,9 @@ export default function ContactHistory({ contact }: Props): JSX.Element {
   /**
    * Start of interval
    * End of interval
-   * Is Shown Call Result Form
    */
   const [ start, setStart ] = useState<DateTime>(DateTime.now().plus({weeks: -1}).startOf("week"))
   const [ end, setEnd ] = useState<DateTime>(DateTime.now().endOf("week"))
-  const [ isShownCallResultForm, setShowCallResultForm ] = useState<boolean>(false)
 
 
   /**
@@ -38,11 +35,9 @@ export default function ContactHistory({ contact }: Props): JSX.Element {
 
 
   /**
-   * Show Form New Call
    * Set Start
    * Set End
    */
-  const handleNewCall: () => void = () => setShowCallResultForm(true)
   const handleSetStart: (event: ChangeEvent<HTMLInputElement>) => void = e => setStart(DateTime.fromISO(e.target.value).startOf("day"))
   const handleSetEnd: (event: ChangeEvent<HTMLInputElement>) => void = e => setEnd(DateTime.fromISO(e.target.value).endOf("day"))
 
@@ -99,7 +94,7 @@ export default function ContactHistory({ contact }: Props): JSX.Element {
      * Is Call
      * IS Meeting
      */
-    const className: string = ["contact-history-item", item.tag].join(" ")
+    const className: string = ["row contact-history-item", item.tag].join(" ")
     const isCall = item.tag === "call"
     const isMeeting = item.tag === "meeting"
 
@@ -121,16 +116,21 @@ export default function ContactHistory({ contact }: Props): JSX.Element {
 
   return (
     <div className="contact-history">
-        {isShownCallResultForm && <CallResult handleShowForm={setShowCallResultForm} />}
-        <h3>Contact history</h3>
-        <button className="new-call" onClick={handleNewCall}>Call to contact</button>
-
-        <div className="row">
-          <input type="date" defaultValue={readableStart} onChange={handleSetStart} />
-          <input type="date" defaultValue={readableEnd} onChange={handleSetEnd} />
+        <div className="white-box">
+          <h3>Contact history</h3>
+          <div className="row">
+            <input type="date" defaultValue={readableStart} onChange={handleSetStart} />
+            <input type="date" defaultValue={readableEnd} onChange={handleSetEnd} />
+          </div>
+          <div className="contact-history-list table">
+            <div className="row header">
+              <div></div>
+              <div>Appointment</div>
+              <div>Detail</div>
+            </div>
+            {contactHistory}
+          </div>
         </div>
-
-        <div className="contact-history-list">{contactHistory}</div>
     </div>
   )
 }
