@@ -34,7 +34,8 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
      * @param meeting Meeting
      * @returns boolean
      */
-    const meetingFilter: (meeting: Meeting) => boolean = (meeting) => {
+    function meetingFilter(meeting: Meeting): boolean
+    {
         /**
          * meeting appointment
          */
@@ -50,13 +51,15 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
      * @param participant Contact
      * @return JSX.Element
      */
-    const participantElement: (participant: Contact) => JSX.Element = (participant) => {
+    function participantElement(participant: Contact): JSX.Element
+    {
         /**
          * Participant ID
          * Participant last name
          */
         const participantId = participant.id
         const lastName = participant.lastName
+
 
         return <div key={participantId}>{lastName}</div>
     }    
@@ -68,7 +71,8 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
      * @param meeting Meeting
      * @returns JSX.Element
      */
-    const meetingCell: (meeting: Meeting) => JSX.Element = (meeting) => {
+    function meetingCell(meeting: Meeting): JSX.Element
+    {
 
         /**
          * Meeting appointment
@@ -76,16 +80,13 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
          * Readable appointment
          */
         const appointment = DateTime.fromISO(meeting.appointment)
-        const meetingId = meeting.id
-        const readableAppointment = appointment.toFormat('dd.MM HH:mm')
+        const meetingId: number = meeting.id
+        const readableAppointment: string = appointment.toFormat('dd.MM HH:mm')
+        const meetingParticipants: JSX.Element[] = meeting.participants.map(participantElement)
 
 
-        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>
-            {readableAppointment}
-            {meeting.participants.map(participantElement)}
-        </div>
+        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>{readableAppointment}{meetingParticipants}</div>
     }
-
 
 
     /**
@@ -93,41 +94,60 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
      * 
      * @param hour number
      * @returns function
-     * 
-     * @param minutes number
-     * @returns JSX.Element
      */
-    const minutesRow: (hour: number) => (minutes: number) => JSX.Element = (hour: number) => (minutes: number) => {
-
+    function minutesRow(hour: number): (minutes: number) => JSX.Element
+    {
         /**
-         * Calendar time
-         * timestamp for attach event
-         * key
+         * @param minutes number
+         * @returns JSX.Element
          */
-        const calendarTime = day.plus({ hours: hour, minutes })
-        const timestamp: string = calendarTime.toFormat(timestampFormat)
-        const key = hour * 60 + minutes
+        return function(minutes: number): JSX.Element
+        {
+            /**
+             * Calendar time
+             * timestamp for attach event
+             * key
+             */
+            const calendarTime = day.plus({ hours: hour, minutes })
+            const timestamp: string = calendarTime.toFormat(timestampFormat)
+            const key = hour * 60 + minutes
 
-        return <div key={key} className="calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
+
+            return <div key={key} className="calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
+        }
     }    
 
 
     /**
+     * Hour Cell
      * 
      * @param _null undefined
      * @param hour number
      * @returns JSX.Element
      */
-    const hourCell: (_null: any, hour: number) => JSX.Element = (_null, hour) => <>
-        <div key={hour} className="calendar-hour">{[0, 15, 30, 45].map(minutesRow(hour))}</div>
-    </>
+    function hourCell(_null: any, hour: number): JSX.Element
+    {
+        /**
+         * Minute Row
+         */
+        const minuteRow: JSX.Element[] = [0, 15, 30, 45].map(minutesRow(hour))
+
+
+        return <div key={hour} className="calendar-hour">{minuteRow}</div>
+    }
+
+
+    /**
+     * Input Select Date
+     * Hour Cells
+     */
+    const inputSelectDate: JSX.Element = <input type="date" defaultValue={dayDefaultValue} onChange={handleSelectDay} />
+    const hourCells: JSX.Element[] = new Array(24).fill(null).map(hourCell)
 
 
     return <div>
-        <div className="white-box">
-            <input type="date" defaultValue={dayDefaultValue} onChange={handleSelectDay} />
-        </div>
-        <div className="calendar-day">{new Array(24).fill(null).map(hourCell)}</div>
+        <div className="white-box">{inputSelectDate}</div>
+        <div className="calendar-day">{hourCells}</div>
         {meetingList.filter(meetingFilter).map(meetingCell)}
     </div>
 }

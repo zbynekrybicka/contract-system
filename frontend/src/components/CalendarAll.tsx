@@ -36,9 +36,29 @@ export default function CalendarAll({ meetingList }: Props)
      * @param meeting Meeting
      * @returns boolean
      */
-    const meetingFilter: (meeting: Meeting) => boolean = (meeting) => {
+    function meetingFilter(meeting: Meeting): boolean
+    {
         const appointment = DateTime.fromISO(meeting.appointment)
         return appointment >= start && appointment <= end
+    }
+
+
+    /**
+     * 
+     * @param participant Contact
+     * @returns JSX.Element
+     */
+    function participantElement(participant: Contact): JSX.Element
+    {
+
+        /**
+         * Participant ID
+         * Last name
+         */
+        const participantId: number = participant.id
+        const lastName = participant.lastName
+
+        return <div key={participantId}>{lastName}</div>
     }
 
 
@@ -48,8 +68,9 @@ export default function CalendarAll({ meetingList }: Props)
      * @param meeting Meeting
      * @returns JSX.Element
      */
-    const meetingCell: (meeting: Meeting) => JSX.Element =  (meeting) => {
-        
+    function meetingCell(meeting: Meeting): JSX.Element
+    {   
+
         /**
          * Meeting appointment
          * Meeting ID
@@ -60,36 +81,18 @@ export default function CalendarAll({ meetingList }: Props)
         const readableAppointment: string = appointment.toFormat('dd.MM HH:mm')
 
 
-        /**
-         * 
-         * @param participant Contact
-         * @returns JSX.Element
-         */
-        const participantElement: (participant: Contact) => JSX.Element = (participant) => {
-
-            /**
-             * Participant ID
-             * Last name
-             */
-            const participantId: number = participant.id
-            const lastName = participant.lastName
-
-            return <div key={participantId}>{lastName}</div>
-        }
-
         return <div className="row" key={meetingId} data-meeting-id={meetingId}>
             <div>{readableAppointment}</div>
             <div>{meeting.participants.map(participantElement)}</div>
         </div>
     }
 
-    return <div>
 
+    return <div>
         <div className="white-box">
             <input type="date" defaultValue={startDefaultValue} onChange={handleSelectStart} />
             <input type="date" defaultValue={endDefaultValue} onChange={handleSelectEnd} />
         </div>
-
         <div className="calendar-all white-box">
             <h3>All events</h3>
             <div className="table">

@@ -54,16 +54,19 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
      * @param dayIndex number
      * @returns JSX.Element
      */
-    const dayCell: (weekIndex: number) => (_null: null, index: number) => JSX.Element = (weekIndex: number) => (_null, dayIndex: number) => {
+    function dayCell(weekIndex: number): (_null: null, index: number) => JSX.Element 
+    {
+        return function(_null, dayIndex: number) 
+        {
+            /**
+             * Timestamp for attach calendar events
+             * key
+             */
+            const timestamp: string | null = firstDay.plus({ weeks: weekIndex, days: dayIndex }).toFormat(timestampFormat) 
+            const key = weekIndex + "-" + dayIndex
 
-        /**
-         * Timestamp for attach calendar events
-         * key
-         */
-        const timestamp: string | null = firstDay.plus({ weeks: weekIndex, days: dayIndex }).toFormat(timestampFormat) 
-        const key = weekIndex + "-" + dayIndex
-
-        return <div key={key} className="calendar-day calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
+            return <div key={key} className="calendar-day calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
+        }
     }    
 
 
@@ -74,9 +77,10 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
      * @param weekIndex number
      * @returns JSX.Element
      */
-    const weekRow: (_null: null, index: number) => JSX.Element = (_i, weekIndex) => <>
-        <div className="calendar-week" key={weekIndex}>{new Array(7).fill(null).map(dayCell(weekIndex))}</div>
-    </>
+    function weekRow(_null: null, weekIndex: number): JSX.Element 
+    {
+        return <div className="calendar-week" key={weekIndex}>{new Array(7).fill(null).map(dayCell(weekIndex))}</div>
+    }
 
 
     /**
@@ -85,7 +89,9 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
      * @param meeting Meeting
      * @returns boolean
      */
-    const meetingFilter: (meeting: Meeting) => boolean = (meeting) => {
+    function meetingFilter(meeting: Meeting): boolean
+    {
+        
         /**
          * Meeting appoint in string
          */
@@ -96,28 +102,55 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
 
 
     /**
+     * Meeting Participant
+     * 
+     * @param participant Contact
+     * @returns JSX.Element
+     */
+    function meetingParticipant(participant: Contact): JSX.Element
+    { 
+        /**
+         * Participant ID
+         * Last Name
+         */
+        const participantId = participant.id
+        const lastName = participant.lastName
+
+        return <div key={participantId}>{lastName}</div>
+    }
+
+
+    /**
      * Meeting cell
      * 
      * @param meeting Meeting
      * @returns JSX.Element
      */
-    const meetingCell: (meeting: Meeting) => JSX.Element = (meeting) => {
-        const appointment = DateTime.fromISO(meeting.appointment)
-        return <div className="calendar-event meeting" key={meeting.id} data-meeting-id={meeting.id}>
-            {appointment.toFormat('dd.MM HH:mm')}
-            {meeting.participants.map((participant: Contact): JSX.Element => <div key={participant.id}>{participant.lastName}</div>)}
-        </div>
+    function meetingCell(meeting: Meeting): JSX.Element 
+    {
+        /**
+         * Meeting ID
+         * Meeting Appointment
+         * Meeting Participants
+         */
+        const meetingId = meeting.id
+        const appointment = DateTime.fromISO(meeting.appointment).toFormat('dd.MM HH:mm')
+        const meetingParticipants = meeting.participants.map(meetingParticipant)
+
+
+        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>{appointment}{meetingParticipants}</div>
     }
 
+
+    const buttonPrevMonth: JSX.Element = <button onClick={handlePrevMonth}>&lt;&lt;&lt;</button>
+    const buttonCurrentMonth: JSX.Element = <button onClick={handleCurrentMonth}>NOW</button>
+    const buttonNextMonth: JSX.Element = <button onClick={handleNextMonth}>&gt;&gt;&gt;</button>
+
+    const calendarMonth: JSX.Element = <>{new Array(countOfWeeks).fill(null).map(weekRow)}</>
+
     return <div>
-        <div className="white-box">
-            <button onClick={handlePrevMonth}>&lt;&lt;&lt;</button>
-            {readableFirstDay}
-            <button onClick={handleCurrentMonth}>NOW</button>
-            {readableLastDay}
-            <button onClick={handleNextMonth}>&gt;&gt;&gt;</button>
-        </div>
-        <div className="calendar-month">{new Array(countOfWeeks).fill(null).map(weekRow)}</div>
+        <div className="white-box">{buttonPrevMonth} {readableFirstDay} {buttonCurrentMonth} {readableLastDay} {buttonNextMonth}</div>
+        <div className="calendar-month">{calendarMonth}</div>
         {meetingList.filter(meetingFilter).map(meetingCell)}
     </div>
 }
