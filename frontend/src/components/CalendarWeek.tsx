@@ -3,6 +3,7 @@ import { DateTime } from "luxon"
 import type { Meeting } from "../services/api/meetingApi"
 import { distributeAppointments } from "../helpers/distributeAppointments"
 import type { Contact } from "../services/api/contactApi"
+import MeetingResultDialog from "./MeetingResultDialog"
 
 type Props = {
     meetingList: Meeting[]
@@ -12,6 +13,7 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
 {
     /**
      * Selected week
+     * Meeting Result Dialog
      * Begin of selected interval
      * End of selected interval
      * Readable start
@@ -21,7 +23,8 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
      * Handle next week
      * Handle current week
      */
-    const [ week, setWeek ] = useState(0)
+    const [ week, setWeek ] = useState<number>(0)
+    const [ meetingResultDialog, showMeetingResultDialog ] = useState<Meeting | null>(null)
     const mondayStart = DateTime.now().plus({ weeks: week }).startOf("week")
     const sundayEnd = mondayStart.endOf("week")
     const readableMondayStart: string = mondayStart.toFormat("dd. MM.")
@@ -30,6 +33,7 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
     const handlePrevWeek: () => void = () => setWeek(week - 1)
     const handleNextWeek: () => void = () => setWeek(week + 1)
     const handleCurrentWeek: () => void = () => setWeek(0)
+    const handleHideMeetingResultDialog: () => void = () => showMeetingResultDialog(null)
 
     /**
      * When day is changed or window resized
@@ -120,7 +124,7 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
             return <div key={participantId}>{lastName}</div>
         }
 
-        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>
+        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId} onClick={() => showMeetingResultDialog(meeting)}>
             {readableAppointment}
             {meeting.participants.map(participantRow)}
         </div>
@@ -139,5 +143,6 @@ export default function CalendarWeek({ meetingList }: Props): JSX.Element
             {new Array(7).fill(null).map(dayColumn)}
             {meetingList.filter(meetingFilter).map(meetingCell)}
         </div>
+        {meetingResultDialog && <MeetingResultDialog meeting={meetingResultDialog} handleCloseForm={handleHideMeetingResultDialog}/>}
     </div>
 }

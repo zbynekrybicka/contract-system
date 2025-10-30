@@ -138,14 +138,22 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
         const meetingParticipants = meeting.participants.map(meetingParticipant)
 
 
-        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>{appointment}{meetingParticipants}</div>
+        return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>
+            {appointment}
+            {meetingParticipants}
+        </div>
     }
 
 
+    /**
+     * Button Previous Month
+     * Button Current Month
+     * Button Next Month
+     * Calendar Month
+     */
     const buttonPrevMonth: JSX.Element = <button onClick={handlePrevMonth}>&lt;&lt;&lt;</button>
     const buttonCurrentMonth: JSX.Element = <button onClick={handleCurrentMonth}>NOW</button>
     const buttonNextMonth: JSX.Element = <button onClick={handleNextMonth}>&gt;&gt;&gt;</button>
-
     const calendarMonth: JSX.Element = <>{new Array(countOfWeeks).fill(null).map(weekRow)}</>
 
     return <div>

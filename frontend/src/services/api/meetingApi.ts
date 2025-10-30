@@ -9,6 +9,16 @@ export type Meeting = {
 };
 
 
+type MeetingResultForm = {
+  id: number
+  result: string
+  type: string
+  price: string
+  nextMeeting: string | null
+  place: string
+}
+
+
 export const meetingApi = api.injectEndpoints({
   endpoints: (b) => ({
 
@@ -24,8 +34,10 @@ export const meetingApi = api.injectEndpoints({
       query: (body) => ({ method: 'POST', url: '/meeting', body }),
     }),
 
-    putMeeting: b.mutation<null, Partial<Meeting>>({
-      query: (body) => ({ method: 'PUT', url: `/meeting/${body.id}`, body })
+    putMeeting: b.mutation<null, MeetingResultForm>({
+      query: (meetingResult) => { 
+        return { method: 'PUT', url: `/meeting/${meetingResult.id}`, meetingResult }
+      }
     }),
 
     deleteMeeting: b.mutation<null, number>({

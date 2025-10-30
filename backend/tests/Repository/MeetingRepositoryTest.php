@@ -80,5 +80,90 @@ final class MeetingRepositoryTest extends DatabaseTestCase
         ];
     }
 
+
+    
+
+
+
+
+
+    
+    /**
+     * @dataProvider dataFindByIdAndParticipant
+     */
+    public function testFindByIdAndParticipant(): void
+    {
+        /** @var MeetingRepository $meetingRepository */
+        $meetingRepository = static::getContainer()->get(MeetingRepository::class);
+
+        /** @var Meeting $meeting */
+        $meeting = $meetingRepository->findByIdAndParticipant();
+
+        // Final check
+        // $this->assertNotNull();
+        // $this->assertSame();
+    }
+    public static function dataFindByIdAndParticipant(): array
+    {
+        return [
+        ];
+    }
+
+    
+
+
+
+
+
+    
+    /**
+     * @dataProvider dataFindParticipantsByMeeting
+     */
+    public function testFindParticipantsByMeeting(): void
+    {
+        /** @var MeetingRepository $meetingRepository */
+        $meetingRepository = static::getContainer()->get(MeetingRepository::class);
+
+        /** @var Meeting $meeting */
+        $meeting = $meetingRepository->findParticipantsByMeeting();
+
+        // Final check
+        // $this->assertNotNull();
+        // $this->assertSame();
+    }
+    public static function dataFindParticipantsByMeeting(): array
+    {
+        return [
+        ];
+    }
+
+    
+
+
+
+
+
+    
+    /**
+     * @dataProvider dataFindSecondParticipant
+     */
+    public function testFindSecondParticipant(): void
+    {
+        /** @var MeetingRepository $meetingRepository */
+        $meetingRepository = static::getContainer()->get(MeetingRepository::class);
+
+        /** @var Meeting $meeting */
+        $meeting = $meetingRepository->findSecondParticipant();
+
+        // Final check
+        // $this->assertNotNull();
+        // $this->assertSame();
+    }
+    public static function dataFindSecondParticipant(): array
+    {
+        return [
+        ];
+    }
+
     
 }

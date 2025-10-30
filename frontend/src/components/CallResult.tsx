@@ -112,7 +112,7 @@ export default function CallResult({ handleShowForm, contact }: Props): JSX.Elem
             <label>Call purpose <textarea name="purpose" defaultValue={purpose} onChange={handleSetPurpose}></textarea></label>
             <label><div className="row"><input type="checkbox" name="successful" defaultChecked={successful} onChange={handleSetSuccessful} />{successfulLabel}</div></label>
             {successful && <CallResultDetail />}
-            <label>Call later <input type="datetime-local" name="next-call" defaultValue={readableNextCall} onChange={handleSetNextCall} /></label>            
+            <label>Call later <input type="datetime-local" name="next-call" defaultValue={readableNextCall} onChange={handleSetNextCall} /></label>
 
             <div className="footer">
                 {isLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> : <button className="save-result" onClick={handleSaveCallResult}>Save Call Result</button>}
