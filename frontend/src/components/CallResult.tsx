@@ -1,19 +1,15 @@
-import { useParams } from "react-router-dom";
 import { usePostCallMutation } from "../services/api/callApi";
 import { useState, type ChangeEvent, type JSX } from "react";
 import { DateTime } from "luxon";
+import type { Contact } from "../services/api/contactApi";
 
 type Props = {
     handleShowForm: (show: boolean) => void
+    contact: Contact
 }
 
-export default function CallResult({ handleShowForm }: Props): JSX.Element {
+export default function CallResult({ handleShowForm, contact }: Props): JSX.Element {
     
-    /**
-     * Contact ID
-     */
-    const contact_id = parseInt(useParams().id || "")
-
 
     /**
      * Call purpose
@@ -69,43 +65,57 @@ export default function CallResult({ handleShowForm }: Props): JSX.Element {
      */
     const [ postCall, { isLoading }] = usePostCallMutation()
     const handleSaveCallResult = () => postCall({
-        contact_id, 
+        receiver: contact,
         purpose,
         successful,
         type,
         description,
-        meetingAppointment: meetingAppointment?.toISO(),
+        meetingAppointment: meetingAppointment?.toISO() || null,
         place,
         nextCall: nextCall?.toISO() || null
     }).then(() => handleShowForm(false));
 
+
+    /**
+     * Appointment meeting (part of form)
+     * @returns JSX.Element
+     */
+    const Appointment: () => JSX.Element = () => <>
+        <label>Meeting Appointment <input type="datetime-local" name="meeting-appointment" defaultValue={readableMeetingAppointment} onChange={handleSetAppointment} /></label>
+        <label>Meeting Place <input type="text" name="place" defaultValue={place} onChange={handleSetPlace} /></label>
+    </>
+
+
+    /**
+     * Fulfill Cal Result (part of form)
+     * @returns JSX.Element
+     */
+    const CallResultDetail: () => JSX.Element = () => <>
+        <label>
+            <select name="type" defaultValue={type} onChange={handleSetType}>
+                <option></option>
+                <option value="meeting">Meeting</option>
+                <option value="rejected">Rejected</option>
+                <option value="postponed">Postponed until later</option>
+            </select>
+        </label>
+
+        <label>Final Description <textarea name="description" defaultValue={description} onChange={handleSetDescription}></textarea></label>
+        {type === "meeting" && <Appointment />}
+    </>
+
   return (
     <div className="dialog-background">
         <div className="dialog call-result">
-
             <div className="header">Call Result <button onClick={handleCloseForm}>X</button></div>
+
             <label>Call purpose <textarea name="purpose" defaultValue={purpose} onChange={handleSetPurpose}></textarea></label>
-            <div className="footer"><button className="call-begin">Begin call</button></div>
             <label><div className="row"><input type="checkbox" name="successful" defaultChecked={successful} onChange={handleSetSuccessful} />{successfulLabel}</div></label>
-
-            <label>
-                <select name="type" defaultValue={type} onChange={handleSetType}>
-                    <option></option>
-                    <option value="meeting">Meeting</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="postponed">Postponed until later</option>
-                </select>
-            </label>
-
-            <label>Final Description <textarea name="description" defaultValue={description} onChange={handleSetDescription}></textarea></label>
-            <label>Meeting Appointment <input type="datetime-local" name="meeting-appointment" defaultValue={readableMeetingAppointment} onChange={handleSetAppointment} /></label>
-            <label>Meeting Place <input type="text" name="place" defaultValue={place} onChange={handleSetPlace} /></label>
+            {successful && <CallResultDetail />}
             <label>Call later <input type="datetime-local" name="next-call" defaultValue={readableNextCall} onChange={handleSetNextCall} /></label>
 
             <div className="footer">
-                {isLoading 
-                    ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> 
-                    : <button className="save-result" onClick={handleSaveCallResult}>Save Call Result</button>}
+                {isLoading ? <img src={"/src/assets/tube-spinner.svg"} height="50px" /> : <button className="save-result" onClick={handleSaveCallResult}>Save Call Result</button>}
             </div>
         </div>
     </div>

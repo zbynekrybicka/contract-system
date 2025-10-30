@@ -8,16 +8,28 @@ export type Call = {
   purpose: string
   realizedAt: string
   successful: boolean
+  type: string
   description: string
   nextCall: string | null
 };
+
+type CallResultForm = {
+  receiver: Contact
+  purpose: string
+  successful: boolean
+  type: string
+  description: string
+  meetingAppointment: string | null
+  place: string
+  nextCall: string | null
+}
 
 
 export const callApi = api.injectEndpoints({
 
   endpoints: (b) => ({
 
-    postCall: b.mutation<{id:number}, Partial<Call>>({
+    postCall: b.mutation<{id:number}, Partial<CallResultForm>>({
       query: (body) => ({ method: 'POST', url: '/call', body }),
       invalidatesTags: (_res, _err, { receiver }) => [{ type: "Contact", id: receiver?.id }]
     }),
