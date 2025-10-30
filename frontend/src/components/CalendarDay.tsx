@@ -29,6 +29,7 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
 
 
     /**
+     * Meeting Filter
      * 
      * @param meeting Meeting
      * @returns boolean
@@ -43,6 +44,30 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
     }
 
 
+    /**
+     * Participant element
+     * 
+     * @param participant Contact
+     * @return JSX.Element
+     */
+    const participantElement: (participant: Contact) => JSX.Element = (participant) => {
+        /**
+         * Participant ID
+         * Participant last name
+         */
+        const participantId = participant.id
+        const lastName = participant.lastName
+
+        return <div key={participantId}>{lastName}</div>
+    }    
+
+
+    /**
+     * Meeting Cell
+     * 
+     * @param meeting Meeting
+     * @returns JSX.Element
+     */
     const meetingCell: (meeting: Meeting) => JSX.Element = (meeting) => {
 
         /**
@@ -55,25 +80,36 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
         const readableAppointment = appointment.toFormat('dd.MM HH:mm')
 
 
-        /**
-         * Participant element
-         */
-        const participantElement: (participant: Contact) => JSX.Element = (participant) => {
-            /**
-             * Participant ID
-             * Participant last name
-             */
-            const participantId = participant.id
-            const lastName = participant.lastName
-
-            return <div key={participantId}>{lastName}</div>
-        }
-
         return <div className="calendar-event meeting" key={meetingId} data-meeting-id={meetingId}>
             {readableAppointment}
             {meeting.participants.map(participantElement)}
         </div>
     }
+
+
+
+    /**
+     * Invisible quarter row
+     * 
+     * @param hour number
+     * @returns function
+     * 
+     * @param minutes number
+     * @returns JSX.Element
+     */
+    const minutesRow: (hour: number) => (minutes: number) => JSX.Element = (hour: number) => (minutes: number) => {
+
+        /**
+         * Calendar time
+         * timestamp for attach event
+         * key
+         */
+        const calendarTime = day.plus({ hours: hour, minutes })
+        const timestamp: string = calendarTime.toFormat(timestampFormat)
+        const key = hour * 60 + minutes
+
+        return <div key={key} className="calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
+    }    
 
 
     /**
@@ -82,30 +118,10 @@ export default function CalendarDay({ meetingList }: Props): JSX.Element
      * @param hour number
      * @returns JSX.Element
      */
-    const hourCell: (_null: any, hour: number) => JSX.Element = (_null, hour) => {
+    const hourCell: (_null: any, hour: number) => JSX.Element = (_null, hour) => <>
+        <div key={hour} className="calendar-hour">{[0, 15, 30, 45].map(minutesRow(hour))}</div>
+    </>
 
-        /**
-         * Invisible quarter row
-         * 
-         * @param minutes number
-         * @returns JSX.Element
-         */
-        const minutesRow: (minutes: number) => JSX.Element = (minutes: number) => {
-
-            /**
-             * Calendar time
-             * timestamp for attach event
-             * key
-             */
-            const calendarTime = day.plus({ hours: hour, minutes })
-            const timestamp: string = calendarTime.toFormat(timestampFormat)
-            const key = hour * 60 + minutes
-
-            return <div key={key} className="calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
-        }
-
-        return <div key={hour} className="calendar-hour">{[0, 15, 30, 45].map(minutesRow)}</div>
-    }
 
     return <div>
         <div className="white-box">

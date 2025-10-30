@@ -45,6 +45,41 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
 
 
     /**
+     * Day Cell
+     * 
+     * @param weekIndex number
+     * @return function
+     * 
+     * @param _null null
+     * @param dayIndex number
+     * @returns JSX.Element
+     */
+    const dayCell: (weekIndex: number) => (_null: null, index: number) => JSX.Element = (weekIndex: number) => (_null, dayIndex: number) => {
+
+        /**
+         * Timestamp for attach calendar events
+         * key
+         */
+        const timestamp: string | null = firstDay.plus({ weeks: weekIndex, days: dayIndex }).toFormat(timestampFormat) 
+        const key = weekIndex + "-" + dayIndex
+
+        return <div key={key} className="calendar-day calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
+    }    
+
+
+    /**
+     * Week Row
+     * 
+     * @param _null null
+     * @param weekIndex number
+     * @returns JSX.Element
+     */
+    const weekRow: (_null: null, index: number) => JSX.Element = (_i, weekIndex) => <>
+        <div className="calendar-week" key={weekIndex}>{new Array(7).fill(null).map(dayCell(weekIndex))}</div>
+    </>
+
+
+    /**
      * Meeting filter
      * 
      * @param meeting Meeting
@@ -72,36 +107,6 @@ export default function CalendarMonth({ meetingList }: Props): JSX.Element
             {appointment.toFormat('dd.MM HH:mm')}
             {meeting.participants.map((participant: Contact): JSX.Element => <div key={participant.id}>{participant.lastName}</div>)}
         </div>
-    }
-
-
-    /**
-     * 
-     * @param _null null
-     * @param weekIndex number
-     * @returns JSX.Element
-     */
-    const weekRow: (_null: null, index: number) => JSX.Element = (_i, weekIndex) => {
-
-        /**
-         * 
-         * @param _null null
-         * @param dayIndex number
-         * @returns JSX.Element
-         */
-        const dayCell: (_null: null, index: number) => JSX.Element = (_null, dayIndex: number) => {
-
-            /**
-             * Timestamp for attach calendar events
-             * key
-             */
-            const timestamp: string | null = firstDay.plus({ weeks: weekIndex, days: dayIndex }).toFormat(timestampFormat) 
-            const key = weekIndex + "-" + dayIndex
-
-            return <div key={key} className="calendar-day calendar-interval" data-timestamp={timestamp}>&nbsp;</div>
-        }
-
-        return <div className="calendar-week" key={weekIndex}>{new Array(7).fill(null).map(dayCell)}</div>
     }
 
     return <div>
