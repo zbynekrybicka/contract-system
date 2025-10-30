@@ -48,15 +48,34 @@ class MeetingRepository extends ServiceEntityRepository
 
 
     /**
+     * Find By ID and Participant
+     * @param int id
+     * @param Contact participant
+     * @return ?Meeting
+     */
+    public function findByIdAndParticipant(int $id, Contact $participant): ?Meeting
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("meeting")
+            ->from(Meeting::class, "meeting")
+            ->andWhere("meeting.id = :id")
+            ->andWhere(":participant MEMBER OF meeting.participants")
+            ->setParameter("id", $id)
+            ->setParameter("participant", $participant)
+            ->getQuery()->getOneOrNullResult();
+    }
+
+
+    /**
      * Create Meeting
      * @param Contact[] participants
-     * @param \DateTimeImmutable appointment
+     * @param string appointment
      * @param string place
      * @return Meeting
      */
-    public function create(array $participants, \DateTimeImmutable $appointment, string $place): Meeting
+    public function create(array $participants, string $appointment, string $place): Meeting
     {
-        $meeting = new Meeting($participants, $appointment, $place);
+        $meeting = new Meeting($participants, new \DateTimeImmutable($appointment), $place);
         $this->persistMeeting($meeting);
         return $meeting;
     }

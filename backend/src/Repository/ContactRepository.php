@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Call;
+use App\Entity\Meeting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -66,6 +67,22 @@ class ContactRepository extends ServiceEntityRepository
             ->setParameter("superior", $superior)
             ->getQuery()->getSingleScalarResult();
     }
+
+
+
+    /**
+     * Find Second Participant
+     * @param Meeting meeting
+     * @param Contact participant
+     */
+    public function findSecondParticipant(Meeting $meeting, Contact $participant): ?Contact
+    {
+        $id = array_find($meeting->getParticipants()->toArray(), function(Contact $item) use ($participant) {
+            return $item->getId() !== $participant->getId();
+        });
+        return $this->findOneById($id);
+    }
+
 
 
     /**

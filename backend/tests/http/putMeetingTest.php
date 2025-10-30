@@ -34,7 +34,8 @@ final class PutMeetingTest extends ApiTestCase {
     public static function dataPutMeeting(): array 
     {
         return [
-            [1, "Success!", "contract", "1000", null, "", 204]
+            [1, "Success!", "contract", "1000", null, "", 204],
+            [1, "Next Success!", "contract", "2000", "2025-11-01 16:30:00", "The Air Cafe", 204],
         ];
     }
 

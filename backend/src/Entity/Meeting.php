@@ -40,11 +40,22 @@ final class Meeting
     /**
      * Participants
      */
-    #[ORM\ManyToMany(targetEntity: Contact::class)]
-    #[ORM\JoinTable(name: 'contact_meeting')]
-    #[ORM\JoinColumn(name: 'meeting_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
-    #[ORM\InverseJoinColumn(name: 'contact_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
+    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'meetings')]
     private Collection $participants;
+
+
+    /**
+     * Result
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $result = null;
+
+
+    /**
+     * Type
+     */
+    #[ORM\Column(name: "result_type", nullable: true)]
+    private ?string $type = null;
 
 
     /**
@@ -60,6 +71,18 @@ final class Meeting
         $this->participants = new ArrayCollection($participants);
         $this->appointment = $appointment;
         $this->place = $place;
+    }
+
+
+    /**
+     * 
+     * @param string result
+     * @param string type
+     */
+    public function fillResult(string $result, string $type)
+    {
+        $this->result = $result;
+        $this->type = $type;
     }
 
 
@@ -104,6 +127,28 @@ final class Meeting
     public function getParticipants(): Collection
     {
         return $this->participants;
+    }
+
+
+    /**
+     * Result
+     * 
+     * @return ?string
+     */
+    public function getResult(): ?string
+    {
+        return $this->result;
+    }
+
+
+    /**
+     * Type
+     * 
+     * @return ?string
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
     }
 
 

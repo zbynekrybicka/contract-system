@@ -28,6 +28,7 @@ final class Call
      */
     #[ORM\ManyToOne(targetEntity: Contact::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
+    #[ORM\InverseJoinColumn(name: 'sender_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
     #[Groups(['contact:read'])]
     private Contact $sender;
 
@@ -35,8 +36,7 @@ final class Call
    /**
      * Receiver
      */
-    #[ORM\ManyToOne(targetEntity: Contact::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
+    #[ORM\ManyToOne(targetEntity: Contact::class, inversedBy: 'calls')]
     #[Groups(['contact:read'])]
     private Contact $receiver;
 
@@ -68,7 +68,7 @@ final class Call
     /**
      * Type of result
      */
-    #[Column(name: "result_type", type: "string", columnDefinition: "ENUM('meeting', 'rejected', 'postponed')")]
+    #[ORM\Column(name: "result_type")]
     #[Assert\NotBlank]
     #[Groups(['contact:read'])]
     private string $type;

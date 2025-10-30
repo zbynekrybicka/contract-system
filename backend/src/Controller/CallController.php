@@ -81,7 +81,7 @@ class CallController extends AbstractController
         $successful = $data['successful'];
         $type = $data['type'];
         $description = $successful ? $data['description'] : "";
-        $meetingAppointment = $type === "meeting" && $successful && $data['meetingAppointment'] ? new \DateTimeImmutable($data['meetingAppointment']) : null;
+        $meetingAppointment = $type === "meeting" && $successful && $data['meetingAppointment'] ?: null;
         $place = $data['place'];
         $nextCall = $data['nextCall'] ? new \DateTime($data['nextCall']) : null;
 
@@ -112,7 +112,7 @@ class CallController extends AbstractController
             /**
              * Send Error It Meeting Appointment Is In Past
              */
-            if ($meetingAppointment < new \DateTimeImmutable()) {
+            if (new \DateTimeImmutable($meetingAppointment) < new \DateTimeImmutable()) {
                 return $this->json("Meeting appointment can not be in past", 400);
             }
 

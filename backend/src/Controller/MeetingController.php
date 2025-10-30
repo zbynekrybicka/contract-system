@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Entity\Meeting;
 use App\Repository\UserRepository;
 use App\Repository\MeetingRepository;
+use App\Repository\ContractRepository;
+use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -66,7 +68,12 @@ class MeetingController extends AbstractController
      * @return JsonResponse
      */
     #[Route('/{id}', methods: ['PUT'])]
-    public function update(Request $request, int $id): JsonResponse
+    public function update(
+        Request $request, 
+        int $id, 
+        ContractRepository $contractRepository, 
+        ContactRepository $contactRepository
+    ): JsonResponse
     {
         /**
          * Find User By Token
@@ -84,6 +91,9 @@ class MeetingController extends AbstractController
          * Find Meeting
          */
         $meeting = $this->meetingRepository->findByIdAndParticipant($id, $contact);
+        if (!$meeting) {
+            return $this->json("Invalid meeting", 400);
+        }
 
         
         /**
@@ -113,23 +123,18 @@ class MeetingController extends AbstractController
         if ($nextMeeting) 
         {
             /**
-             * Find Participants of Current Meeting
-             */
-            $participants = $this->meetingRepository->findParticipantsByMeeting($meeting);
-
-
-            /**
              * Create New Meeting
              */
             $place = $data['place'];
+            $participants = $meeting->getParticipants()->toArray();
             $newMeeting = $this->meetingRepository->create($participants, $nextMeeting, $place);
         }
 
 
         /**
-         * If Result of Meeting is not Contract, finish
+         * If Type of Meeting Result is not Contract, finish
          */
-        if ($result !== "contract") {
+        if ($type !== "contract") {
             return $this->json(null, 204);
         }
 
@@ -137,12 +142,16 @@ class MeetingController extends AbstractController
         /**
          * Find Contact to New Client
          */
-        $client = $this->meetingRepository->findSecondParticipant($meeting, $contact);
+        $client = $contactRepository->findSecondParticipant($meeting, $contact);
+        if (!$client) {
+            return $this->json("New client not found", 400);
+        }
 
 
         /**
          * Create new Contract
          */
+        $price = intval($data['price']);
         $contractRepository->create($client, $price);
 
 

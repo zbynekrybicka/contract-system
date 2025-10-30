@@ -2,7 +2,6 @@
 namespace App\Entity;
 
 use App\Repository\ContactRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -81,17 +80,13 @@ class Contact
      * Realized Calls
      */
     #[ORM\OneToMany(targetEntity: Call::class, mappedBy: "receiver")]
-    #[ORM\JoinColumn(onDelete: 'RESTRICT')]
     private Collection $calls;
 
 
     /**
      * Meetings
      */
-    #[ORM\ManyToMany(targetEntity: Meeting::class)]
-    #[ORM\JoinTable(name: 'contact_meeting')]
-    #[ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
-    #[ORM\InverseJoinColumn(name: 'meeting_id', referencedColumnName: 'id', onDelete: 'RESTRICT')]
+    #[ORM\ManyToMany(targetEntity: Meeting::class, mappedBy: 'participants')]
     private Collection $meetings;
 
 

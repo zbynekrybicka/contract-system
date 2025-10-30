@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Contract;
+use App\Entity\Contact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,20 +15,16 @@ class ContractRepository extends ServiceEntityRepository
     }
 
 
-    public function findOne(int $id): ?array
+    /**
+     * @param Contact client
+     * @param int price
+     * @return Contract
+     */
+    public function create(Contact $client, int $price): Contract
     {
-        $row = $this->db->executeQuery(
-            'SELECT * FROM %TableName% WHERE id = :id',
-            ['id' => $id],
-            ['id' => \PDO::PARAM_INT]
-        )->fetchAssociative();
-
-        return $row ?: null;
-    }
-
-    public function newContract(): Contract
-    {
-        return new Contract();
+        $contract = new Contract($client, $price);
+        $this->persistContract($contract);
+        return $contract;
     }
 
     public function persistContract(Contract $item)
