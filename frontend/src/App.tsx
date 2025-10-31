@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from './hooks';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from './hooks'
 
 import './style/App.css'
 import './style/login.css'
@@ -8,13 +8,14 @@ import './style/calendar.css'
 import './style/dialogs.css'
 import './style/controls.css'
 
-import Login from './components/Login'; 
-import Contacts from './components/Contacts'; 
-import ContactDetail from './components/ContactDetail';
-import Calendar from './components/Calendar';
+import Login from './components/Login'
+import Contacts from './components/Contacts'
+import ContactDetail from './components/ContactDetail'
+import Calendar from './components/Calendar'
+import Contracts from './components/Contracts'
 
-import { getAuthToken, logout } from './store/authSlice';
-import Dashboard from './components/Dashboard';
+import { getAuthToken, logout } from './store/authSlice'
+import Dashboard from './components/Dashboard'
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -28,6 +29,7 @@ export default function App() {
           <Link to="/">Dashboard</Link>
           <Link to="/calendar">Calendar</Link>
           <Link to="/contacts">Contacts</Link>
+          <Link to="/contracts">Sales</Link>
           <a href="#" onClick={() => dispatch(logout())}>Logout</a>
         </nav>
 
@@ -36,6 +38,7 @@ export default function App() {
             <Route path="/" element={<Dashboard/>} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/contacts" element={<Contacts/>} />
+            <Route path="/contracts" element={<Contracts />} />
             <Route path="/contacts/:id" element={<ContactDetail/>} />
             <Route path="*" element={<Navigate to="/contacts" replace />} />
           </Routes>

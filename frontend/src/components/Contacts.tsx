@@ -2,8 +2,8 @@ import { useGetContactQuery, type Contact } from '../services/api/contactApi';
 import NewContact from './NewContact.tsx'
 import { useState, type JSX } from 'react';
 
-export default function Contacts() {
-
+export default function Contacts(): JSX.Element 
+{
   /**
    * @var contactList Contact[]
    * @var isContactListLoading boolean

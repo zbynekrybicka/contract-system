@@ -17,7 +17,7 @@ final class GetContractTest extends ApiTestCase {
         $statusCode = static::$client->getResponse()->getStatusCode();
         $this->assertSame($statusCode, $result);
         if ($statusCode === 200) {
-            dump(static::$client->getResponse()->getContent());
+            // dump(static::$client->getResponse()->getContent());
         }
     }
 

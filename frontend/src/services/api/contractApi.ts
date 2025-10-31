@@ -1,7 +1,11 @@
 import { api } from '.';
+import type { Contact } from './contactApi';
 
 export type Contract = { 
-  id: number; 
+  id: number
+  client: Contact
+  price: number
+  paid: boolean
 };
 
 export const contractApi = api.injectEndpoints({
