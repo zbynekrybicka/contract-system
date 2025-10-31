@@ -16,13 +16,30 @@ class ContractRepository extends ServiceEntityRepository
 
 
     /**
+     * @param Contact salesman
+     * @param Contract[]
+     */
+    public function findBySalesman(Contact $salesman): array
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("contract")
+            ->from(Contract::class, "contract")
+            ->andWhere("contract.salesman = :salesman")
+            ->setParameter("salesman", $salesman)
+            ->getQuery()->getResult();
+    }
+
+
+
+    /**
+     * @param Contact salesman
      * @param Contact client
      * @param int price
      * @return Contract
      */
-    public function create(Contact $client, int $price): Contract
+    public function create(Contact $salesman, Contact $client, int $price): Contract
     {
-        $contract = new Contract($client, $price);
+        $contract = new Contract($salesman, $client, $price);
         $this->persistContract($contract);
         return $contract;
     }

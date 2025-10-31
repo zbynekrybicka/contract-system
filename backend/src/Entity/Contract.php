@@ -22,6 +22,14 @@ final class Contract
 
 
     /**
+     * Salesman
+     */
+    #[ORM\ManyToOne(targetEntity: Contact::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'RESTRICT')]
+    private Contact $salesman;
+
+
+    /**
      * Client
      */
     #[ORM\ManyToOne(targetEntity: Contact::class)]
@@ -44,11 +52,13 @@ final class Contract
 
     
     /**
+     * @param Contact salesman
      * @param Contact client
      * @param int price
      */
-    public function __construct(Contact $client, int $price)
+    public function __construct(Contact $salesman, Contact $client, int $price)
     {
+        $this->salesman = $salesman;
         $this->client = $client;
         $this->price = $price;
     }
@@ -62,6 +72,17 @@ final class Contract
     public function getId(): ?int 
     { 
         return $this->id; 
+    }
+
+
+    /**
+     * Salesman
+     * 
+     * @return Contact
+     */
+    public function getSalesman(): Contact
+    {
+        return $this->salesman;
     }
 
 

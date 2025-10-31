@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Contract;
 use App\Repository\ContractRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,16 +13,51 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/contract')]
 class ContractController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em) {}
+    private $contractRepository;
+    private $userRepository;
 
+    
+    public function __construct(
+        ContractRepository $contractRepository, 
+        UserRepository $userRepository
+    ) {
+        $this->contractRepository = $contractRepository;
+        $this->userRepository = $userRepository;
+    }
+
+
+    /**
+     * GET /contract
+     * Request for Get All Contracts For Salesman
+     */
     #[Route('', methods: ['GET'])]
     public function getAll(ContractRepository $contractRepository): JsonResponse
     {
-        $contractList = $contractRepository->findAll();
-        return $this->json($contractList);
+        /**
+         * Get User and Salesman By Token
+         */
+        $user = $this->userRepository->findByToken();
+        $salesman = $user->getContact();
+
+        
+        /**
+         * Get Contract List
+         */
+        $contractList = $contractRepository->findBySalesman($salesman);
+
+
+        /**
+         * Return result in structure
+         */
+        return $this->json($contractList, 200, [], [
+            'attributes' => [
+                'id', 'price', 'paid',
+                'client' => [ 'id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber' ]
+            ]
+        ]);
     }
 
-    #[Route('/{id}', methods: ['GET'])]
+    /*#[Route('/{id}', methods: ['GET'])]
     public function getOne(ContractRepository $contractRepository): JsonResponse
     {
         $contractList = $contractRepository->findAll();
@@ -50,6 +86,5 @@ class ContractController extends AbstractController
     {
         $contractRepository->delete($contract);
         return $this->json(null, 204);
-    }
-
+    }*/
 }

@@ -84,13 +84,13 @@ class MeetingController extends AbstractController
         /**
          * User Contact
          */
-        $contact = $user->getContact();
+        $salesman = $user->getContact();
 
 
         /**
          * Find Meeting
          */
-        $meeting = $this->meetingRepository->findByIdAndParticipant($id, $contact);
+        $meeting = $this->meetingRepository->findByIdAndParticipant($id, $salesman);
         if (!$meeting) {
             return $this->json("Invalid meeting", 400);
         }
@@ -142,7 +142,7 @@ class MeetingController extends AbstractController
         /**
          * Find Contact to New Client
          */
-        $client = $contactRepository->findSecondParticipant($meeting, $contact);
+        $client = $contactRepository->findSecondParticipant($meeting, $salesman);
         if (!$client) {
             return $this->json("New client not found", 400);
         }
@@ -152,7 +152,7 @@ class MeetingController extends AbstractController
          * Create new Contract
          */
         $price = intval($data['price']);
-        $contractRepository->create($client, $price);
+        $contractRepository->create($salesman, $client, $price);
 
 
         return $this->json(null, 204);
