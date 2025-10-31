@@ -29,6 +29,7 @@ class ContractController extends AbstractController
     /**
      * GET /contract
      * Request for Get All Contracts For Salesman
+     * getContractTest.php
      */
     #[Route('', methods: ['GET'])]
     public function getAll(ContractRepository $contractRepository): JsonResponse
@@ -57,6 +58,51 @@ class ContractController extends AbstractController
         ]);
     }
 
+
+    /**
+     * PUT /contract/:id
+     * Request for save changes in contract
+     * putContractTest.php
+     */
+    #[Route('/{id}', methods: ['PUT'])]
+    public function update(Request $request, int $id): JsonResponse
+    {
+        /**
+         * Find User By Token
+         */
+        $user = $this->userRepository->findByToken();
+        
+
+        /**
+         * Find Contract By ID and Salesman
+         */
+        $salesman = $user->getContact();
+        $contract = $this->contractRepository->findByIdAndSalesman($id, $salesman);
+
+
+        /**
+         * Get Request Data
+         */
+        $data = json_decode($request->getContent(), true);
+
+
+        /** 
+         * Update Contract 
+         */
+        $price = $data['price'];
+        $paid = $data['paid'];
+        $contract->setPriceAndPaid($price, $paid);
+
+
+        /**
+         * Persist Contract
+         */
+        $this->contractRepository->persistContract($contract);
+
+
+        return $this->json(null, 204);
+    }
+
     /*#[Route('/{id}', methods: ['GET'])]
     public function getOne(ContractRepository $contractRepository): JsonResponse
     {
@@ -71,14 +117,6 @@ class ContractController extends AbstractController
         $contract = $contractRepository->create($data);
         $contractRepository->persist($contract);
         return $this->json(['id' => $$contract->getId()], 201);
-    }
-
-    #[Route('/{id}', methods: ['PUT'])]
-    public function update(Contract $contract, ContractRepository $contractRepository): JsonResponse
-    {
-
-        $contractRepository->persist($contract);
-        return $this->json(null, 204);
     }
 
     #[Route('/{id}', methods: ['DELETE'])]

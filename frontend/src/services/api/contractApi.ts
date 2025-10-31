@@ -14,6 +14,7 @@ export const contractApi = api.injectEndpoints({
 
     getContract: b.query<Contract[], {}>({
       query: () => ({ method: 'GET', url: `/contract` }),
+      providesTags: (_err, _res) => [{ type: "Contracts" }]
     }),
 
     getOneContract: b.query<Contract, {}>({
@@ -25,7 +26,8 @@ export const contractApi = api.injectEndpoints({
     }),
 
     putContract: b.mutation<null, Partial<Contract>>({
-      query: (body) => ({ method: 'PUT', url: `/contract/${body.id}`, body })
+      query: (body) => ({ method: 'PUT', url: `/contract/${body.id}`, body }),
+      invalidatesTags: (_res, _err, { }) => [{ type: "Contracts" }]
     }),
 
     deleteContract: b.mutation<null, number>({

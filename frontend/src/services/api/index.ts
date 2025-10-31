@@ -21,6 +21,6 @@ export const api = createApi({
     }
     return result
   },
-  tagTypes: [ "Contacts", "Contact" ],
+  tagTypes: [ "Contacts", "Contact", "Contracts" ],
   endpoints: () => ({}),
 });

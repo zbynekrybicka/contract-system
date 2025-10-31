@@ -65,6 +65,17 @@ final class Contract
 
 
     /**
+     * @param int price
+     * @param bool paid
+     */
+    public function setPriceAndPaid(int $price, bool $paid)
+    {
+        $this->price = $price;
+        $this->paid = $paid;
+    }
+
+
+    /**
      * ID
      * 
      * @return ?int

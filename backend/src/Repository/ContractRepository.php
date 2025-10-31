@@ -30,6 +30,24 @@ class ContractRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * Find By ID and Salesman
+     * @param int id
+     * @param Contact salesman
+     * @return ?Contract
+     */
+    public function findByIdAndSalesman(int $id, Contact $salesman): ?Contract
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("contract")
+            ->from(Contract::class, "contract")
+            ->andWhere("contract.salesman = :salesman")
+            ->andWhere("contract.id = :id")
+            ->setParameter("salesman", $salesman)
+            ->setParameter("id", $id)
+            ->getQuery()->getOneOrNullResult();
+    }
+
 
     /**
      * @param Contact salesman
