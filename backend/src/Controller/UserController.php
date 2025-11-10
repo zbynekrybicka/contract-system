@@ -159,4 +159,142 @@ class UserController extends AbstractController
         ]);
     }
 
+
+    /**
+     * POST /user
+     * Request for promote contact to user
+     * Test: postUserTest.php
+     * 
+     * @param Request $request
+     * @param ContactRepository $contactRepository
+     * @return JsonResponse
+     */
+    #[Route('/user', name: 'postUser', methods: ['POST'])]
+    public function postUser(Request $request, ContactRepository $contactRepository): JsonResponse
+    {
+        /**
+         * get current user
+         */
+        $user = $this->userRepository->findByToken();
+        $superior = $user->getContact();
+
+
+        /**
+         * get POST data
+         */
+        $data = json_decode($request->getContent(), true);
+        $contactId = $data['contactId'];
+
+
+        /**
+         * get contact by id
+         */
+        $contact = $contactRepository->findWithSuperior($superior, $contactId);
+        if (!$contact) {
+            return $this->json(null, 400);
+        }
+
+        
+        /**
+         * create new user by contact
+         */
+        $user = $this->userRepository->createByContact($contact);
+        
+
+        return $this->json($user->getId(), 201);
+    }
+
+
+    /**
+     * PUT /user/new-password
+     * Request for set new password
+     * Test: putUserNewPasswordTest.php
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[Route('/user/new-password', name: 'putUserNewPassword', methods: ['PUT'])]
+    public function putUserNewPassword(Request $request): JsonResponse
+    {
+        /**
+         * get POST data
+         */
+        $data = json_decode($request->getContent(), true);
+        $newPassword = $data['newPassword'];
+        $confirmPassword = $data['confirmPassword'];
+        if ($newPassword !== $confirmPassword) {
+            return $this->json(null, 400);
+        }
+
+
+        /**
+         * get user by hash
+         */
+        $user = $this->userRepository->findByToken();
+        if (!$user) {
+            return $this->json(null, 401);
+        }
+
+
+        /**
+         * set user password
+         */
+        if ($user->isPasswordSet()) {
+            return $this->json(null, 400);
+        }
+        $user->setPassword($newPassword);
+        $this->userRepository->persistUser($user);
+
+
+        return $this->json(null, 204);
+    }
+
+
+    /**
+     * GET /user/{id}/token
+     * Request for get user token by id
+     * Test: getUserTokenTest.php
+     * @param int $id
+     * @param JWTTokenManagerInterface $jwtManager
+     * @return JsonResponse
+     */
+    #[Route('/user/{id}/token', name: 'getUserToken', methods: ['GET'])]
+    public function getUserToken(int $id, JWTTokenManagerInterface $jwtManager, ContactRepository $contactRepository): JsonResponse
+    {
+        /**
+         * get user by token
+         */
+        $user = $this->userRepository->findByToken();
+        if (!$user) {
+            return $this->json(null, 401);
+        }
+        $superior = $user->getContact();
+
+
+        /**
+         * get contact by superior
+         */
+        $contact = $contactRepository->findWithSuperior($superior, $id);
+        if (!$contact) {
+            return $this->json(null, 400);
+        }
+
+
+        /**
+         * get user by contact
+         */
+        $subordinate = $this->userRepository->findByContact($contact);
+        if (!$subordinate) {
+            return $this->json(null, 400);
+        }
+
+
+        /**
+         * create token for user
+         */
+        $token = $jwtManager->create($subordinate);
+
+
+        return $this->json($token);
+    }
+
 }

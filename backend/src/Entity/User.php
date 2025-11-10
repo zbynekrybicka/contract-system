@@ -30,7 +30,7 @@ class User implements UserInterface
     /**
      * Password
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $password = null;
 
 
@@ -109,6 +109,17 @@ class User implements UserInterface
     public function verifyPassword(string $password): bool
     {
         return password_verify($password, $this->password);
+    }
+
+
+    /**
+     * Is Password Set
+     * 
+     * @return bool
+     */
+    public function isPasswordSet(): bool
+    {
+        return !is_null($this->password);
     }
 
 

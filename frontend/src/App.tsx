@@ -16,13 +16,13 @@ import Contracts from './components/Contracts'
 
 import { getAuthToken, logout } from './store/authSlice'
 import Dashboard from './components/Dashboard'
+import NewPassword from './components/NewPassword'
 
 export default function App() {
   const dispatch = useAppDispatch()
   const authToken = useAppSelector(getAuthToken)
   
-  return (authToken ?
-    <BrowserRouter>
+  return <BrowserRouter>{authToken ?
       <div className="content">
         <nav>
           <h1>CONTRACT<br/>SYSTEM</h1>
@@ -44,7 +44,11 @@ export default function App() {
           </Routes>
         </div>
       </div>
-    </BrowserRouter>
-    : <Login />
-  )
+    : <div>
+      <Routes>
+        <Route path="/new-password/:token" element={<NewPassword />} />
+        <Route path="*" element={<Login />} />
+      </Routes> 
+    </div>}
+  </BrowserRouter>
 }

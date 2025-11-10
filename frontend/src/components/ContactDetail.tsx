@@ -4,6 +4,7 @@ import EditContact from "./EditContact.tsx";
 import ContactHistory from "./ContactHistory"
 import CallResult from "./CallResult"
 import { useState, type JSX } from "react";
+import PromoteContact from "./PromoteContact.tsx";
 
 export default function ContactDetail(): JSX.Element {
 
@@ -15,6 +16,7 @@ export default function ContactDetail(): JSX.Element {
   const id = useParams().id || ""
   const [ isShownEditContactForm, setShownEditContactForm ] = useState<boolean>(false)
   const [ isShownCallResultForm, setShowCallResultForm ] = useState<boolean>(false)
+  const [ isShownPromoteContactDialog, setShowPromoteContactDialog ] = useState<boolean>(false)
 
 
   /**
@@ -35,12 +37,14 @@ export default function ContactDetail(): JSX.Element {
    */
   const handleShowEditContactForm: () => void = () => setShownEditContactForm(true)
   const handleNewCall: () => void = () => setShowCallResultForm(true)
+  const handlePromoteContactDialog: () => void = () => setShowPromoteContactDialog(true)
 
 
   return (
     <div className="contact-detail">
       {isShownEditContactForm && contactDetail && <EditContact contact={contactDetail} handleShowForm={setShownEditContactForm} />}
       {isShownCallResultForm && contactDetail && <CallResult contact={contactDetail} handleShowForm={setShowCallResultForm} />}
+      {isShownPromoteContactDialog && contactDetail && <PromoteContact contact={contactDetail} handleCloseForm={setShowPromoteContactDialog} />}
 
       {isContactDetailLoading 
         ? <img src={"/src/assets/tube-spinner.svg"} height="100px" />
@@ -50,6 +54,7 @@ export default function ContactDetail(): JSX.Element {
             <div className="white-box">
               <button className="edit-contact" onClick={handleShowEditContactForm}>Edit contact</button>
               <button className="new-call" onClick={handleNewCall}>Call to contact</button>
+              <button className="promote-contact" onClick={handlePromoteContactDialog}>Promote contact to member</button>
             </div>
             <ContactHistory contact={contactDetail} />
           </div>

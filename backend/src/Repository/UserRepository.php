@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\Contact;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -70,6 +71,49 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+
+    /**
+     * Find By Contact
+     * @param Contact contact
+     * @return ?User
+     */
+    public function findByContact(Contact $contact): ?User
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select("u")
+            ->from("\App\Entity\User", "u")
+            ->andWhere('u.contact = :contact')
+            ->setParameter("contact", $contact)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
+    /**
+     * Create User By Contact
+     * @param Contact contact
+     * @return User
+     */
+    public function createByContact(Contact $contact): User
+    {
+        $user = new User($contact);
+        $this->persistUser($user);
+        return $user;
+    }
+
+
+    /**
+     * Save User
+     * @param User user
+     */
+    public function persistUser(User $user)
+    {
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
     }
 
 }

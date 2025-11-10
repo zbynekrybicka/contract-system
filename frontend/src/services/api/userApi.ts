@@ -29,6 +29,19 @@ export const userApi = api.injectEndpoints({
       query: (body) => ({ method: 'POST', url: '/login', body }),
     }),
 
+    postUser: b.mutation<void, { contactId: number }>({
+      query: (body) => ({ method: 'POST', url: '/user', body }),
+    }),
+
+    putUserNewPassword: b.mutation<void, { token: string, newPassword: string; confirmPassword: string }>({
+      query: (body) => ({
+        method: 'PUT',
+        url: '/user/new-password',
+        body,
+        headers: { Authorization: `Bearer ${body.token}` },
+      }),
+    }),
+
   }),
 });
-export const { useGetUserStatisticsQuery, usePostLoginMutation } = userApi;
+export const { useGetUserStatisticsQuery, usePostLoginMutation, usePostUserMutation, usePutUserNewPasswordMutation } = userApi;
