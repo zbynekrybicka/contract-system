@@ -13,6 +13,12 @@ export type UserStatistics = {
   meetings: number
 }
 
+export type Salesman = {
+  id: number
+  name: string
+  subordinates: Salesman[]
+}
+
 export type PostLoginResult = {
   data?: string;
 }
@@ -23,6 +29,10 @@ export const userApi = api.injectEndpoints({
 
     getUserStatistics: b.query<UserStatistics, null>({
       query: () => ({ method: 'GET', url: `/user/statistics` })
+    }),
+
+    getSalesmanTree: b.query<Salesman[], null>({
+      query: () => ({ method: 'GET', url: `/user/salesman-tree` })
     }),
 
     postLogin: b.mutation<string, LoginFormData>({
@@ -44,4 +54,4 @@ export const userApi = api.injectEndpoints({
 
   }),
 });
-export const { useGetUserStatisticsQuery, usePostLoginMutation, usePostUserMutation, usePutUserNewPasswordMutation } = userApi;
+export const { useGetUserStatisticsQuery, usePostLoginMutation, usePostUserMutation, usePutUserNewPasswordMutation, useGetSalesmanTreeQuery } = userApi;

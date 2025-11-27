@@ -77,6 +77,13 @@ class Contact
 
 
     /**
+     * Subordinates
+     */
+    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: "superior")]
+    private Collection $subordinates;
+
+
+    /**
      * Realized Calls
      */
     #[ORM\OneToMany(targetEntity: Call::class, mappedBy: "receiver")]
@@ -176,6 +183,17 @@ class Contact
 
 
     /**
+     * Get full name
+     * 
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return trim($this->firstName . ' ' . $this->middleName . ' ' . $this->lastName);
+    }
+
+
+    /**
      * Email
      * 
      * @return string
@@ -194,6 +212,17 @@ class Contact
     public function getSuperior(): ?Contact
     {
         return $this->superior;
+    }
+
+
+    /**
+     * Subordinates
+     * 
+     * @return Collection<Contact>
+     */
+    public function getSubordinates(): Collection
+    {
+        return $this->subordinates;
     }
 
 
