@@ -305,6 +305,7 @@ class UserController extends AbstractController
             $subordinates[] = [
                 'id' => $subordinate->getId(),
                 'name' => $subordinate->getFullName(),
+                'isSalesman' => $subordinate->isSalesman(),
                 'subordinates' => $this->buildSalesmanTree($subordinate)
             ];
         }
@@ -322,7 +323,14 @@ class UserController extends AbstractController
         $superior = $user->getContact();
 
         $salesmanTree = $this->buildSalesmanTree($superior);
-        return $this->json($salesmanTree);
+        return $this->json([
+            [
+                'id' => $superior->getId(),
+                'name' => $superior->getFullName(),
+                'isSalesman' => $superior->isSalesman(),
+                'subordinates' => $salesmanTree
+            ]
+        ]);
     }
-
+    
 }

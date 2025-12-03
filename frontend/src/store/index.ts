@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import auth from './authSlice';
+import salesmanFilter from './salesmanFilterSlice';
 import { api } from '../services/api';
 
 export const rootReducer = combineReducers({
@@ -7,6 +8,7 @@ export const rootReducer = combineReducers({
    * Here register new reducers
    */
   auth,
+  salesmanFilter,
   [api.reducerPath]: api.reducer,
 });
 

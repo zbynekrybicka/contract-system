@@ -98,6 +98,12 @@ class Contact
 
 
     /**
+     * User
+     */
+    #[ORM\OneToOne(targetEntity: User::class, mappedBy: "contact")]
+    private ?User $user = null;
+
+    /**
      * @param ?Contact superior
      * @param string firstName
      * @param string middleName
@@ -223,6 +229,34 @@ class Contact
     public function getSubordinates(): Collection
     {
         return $this->subordinates;
+    }
+
+
+    /**
+     * Salesmen
+     * 
+     * @return Collection<Contact>
+     */
+    public function getSalesmen(): Collection
+    {
+
+        $salesmen = array_filter(
+            $this->subordinates->toArray(),
+            fn(Contact $contact) => $contact->isSalesman()
+        );
+        return new \Doctrine\Common\Collections\ArrayCollection($salesmen);
+    }
+
+
+
+    /**
+     * Is Salesman
+     * 
+     * @return bool
+     */
+    public function isSalesman(): bool
+    {
+        return $this->user !== null;
     }
 
 

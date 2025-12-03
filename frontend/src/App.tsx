@@ -13,7 +13,6 @@ import Contacts from './components/Contacts'
 import ContactDetail from './components/ContactDetail'
 import Calendar from './components/Calendar'
 import Contracts from './components/Contracts'
-import SubordinateTree from './components/SubordinateTree'
 
 import { getAuthToken, logout } from './store/authSlice'
 import Dashboard from './components/Dashboard'
@@ -35,7 +34,6 @@ export default function App() {
         </nav>
 
         <div className="container">
-          <SubordinateTree />
           <Routes>
             <Route path="/" element={<Dashboard/>} />
             <Route path="/calendar" element={<Calendar />} />
