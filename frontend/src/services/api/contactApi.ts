@@ -18,8 +18,8 @@ export const contactApi = api.injectEndpoints({
 
   endpoints: (b) => ({
 
-    getContact: b.query<Contact[], {}>({
-      query: () => ({ method: 'GET', url: `/contact` }),
+    getContact: b.query<Contact[], number>({
+      query: (id: number) => ({ method: 'GET', url: `/contact`, params: { id } }),
       providesTags: (_err, _res) => [{ type: "Contacts" }]
     }),
 

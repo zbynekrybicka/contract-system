@@ -1,14 +1,16 @@
 import { useGetContactQuery, type Contact } from '../services/api/contactApi';
 import NewContact from './NewContact.tsx'
 import { useState, type JSX } from 'react';
+import SubordinateTree from './SubordinateTree.tsx';
+import { getFilteredSalesmanId } from '../store/salesmanFilterSlice.ts';
+import { useAppSelector } from '../hooks.ts';
 
 export default function Contacts(): JSX.Element 
 {
-  /**
-   * @var contactList Contact[]
-   * @var isContactListLoading boolean
-   */
-  const { data: contactList, isLoading: isContactListLoading } = useGetContactQuery({});
+  const salesmanId = useAppSelector(getFilteredSalesmanId);
+  const { data: contactList = [], isLoading: isContactListLoading } = useGetContactQuery(salesmanId!, { skip: salesmanId === null });
+  // console.log(salesmanId)
+  // console.log(isContactListLoading)
 
 
   /**
@@ -57,6 +59,7 @@ export default function Contacts(): JSX.Element
       {isShownNewContact && <NewContact handleShowForm={setShowNewContact} />}
       <h2><div className="inner-content">Contacts</div></h2>
       <div className="inner-content routes">
+        <SubordinateTree />
         <div className="white-box">
           <button className="button-new-contact" onClick={handleNewContact}>New contact</button>
         </div>
