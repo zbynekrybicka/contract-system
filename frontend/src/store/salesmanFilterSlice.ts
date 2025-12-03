@@ -13,6 +13,7 @@ const slice = createSlice({
          * @param action Action<number | null>
          */
         setFilteredSalesmanId: (state: { filteredSalesmanId: number | null }, action: Action<number | null>) => { 
+            // console.log(action)
             state.filteredSalesmanId = action.payload
         },
     }

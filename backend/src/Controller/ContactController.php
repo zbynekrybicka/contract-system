@@ -40,25 +40,36 @@ class ContactController extends AbstractController
      * Request for get all contacts from user
      */
     #[Route('', methods: ['GET'])]
-    public function getAll(): JsonResponse
+    public function getAll(Request $request): JsonResponse
     {
         /**
          * Get User By Auth Token
          */
         $user = $this->userRepository->findByToken();
 
-
         /**
          * Get Contact List By User
          */
         $superior = $user->getContact();
-        $contactList = $this->contactRepository->getBySuperior($superior);
-
+        $data = $request->query->all();
+        if (array_key_exists('id', $data)) {
+            $id = intval($data['id']) ?: null;
+            $ids = $this->contactRepository->getSubordinateIds($superior);
+            if ($id !== null && !in_array($id, $ids)) {
+                return $this->json(null, 401);
+            }
+            $contact = $this->contactRepository->find($id);
+        } else {
+            $contact = $superior;
+        }
+        $contactList = $contact->getSubordinates();
 
         /**
          * Send result in structure
          */
-        return $this->json($contactList, 200, [], [ 'attributes' => ['id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber']]);
+        $result = $this->json($contactList, 200, [], [ 'attributes' => ['id', 'firstName', 'middleName', 'lastName', 'email', 'dialNumber', 'phoneNumber']]);
+        // var_dump($result);
+        return $result;
     }
 
 

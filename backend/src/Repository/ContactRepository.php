@@ -69,6 +69,23 @@ class ContactRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * Get All Subordinate IDs Recursively
+     * @param Contact contact
+     * @return array
+     */
+    public function getSubordinateIds(Contact $contact): array
+    {
+        $ids = [$contact->getId()];
+        $subordinates = $contact->getSubordinates();
+        foreach ($subordinates as $subordinate) {
+            $ids[] = $subordinate->getId();
+            $ids = array_merge($ids, $this->getSubordinateIds($subordinate));
+        }
+        return $ids;
+    }
+
+
 
     /**
      * Find Second Participant

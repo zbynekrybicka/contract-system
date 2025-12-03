@@ -9,8 +9,15 @@ export default function SubordinateTree() : JSX.Element
     const dispatch = useDispatch();
     const { data: salesmanList, isLoading: isSalesmanListLoading } = useGetSalesmanTreeQuery(null);
     useEffect(() => {
+        // console.log(salesmanList)
         dispatch(setFilteredSalesmanId(salesmanList ? salesmanList[0].id : null));
     }, [salesmanList]);
+
+
+    const handleSelectSalesman = (salesman: any) => (event: React.MouseEvent<HTMLLIElement>) => {
+        event.stopPropagation();
+        dispatch(setFilteredSalesmanId(salesman.id))
+    }
 
     /**
      * @param salesmen any[]
@@ -20,7 +27,7 @@ export default function SubordinateTree() : JSX.Element
     {
         return <ul>
             {salesmen.filter(salesman => salesman.isSalesman).map(salesman => 
-                <li key={salesman.id} onClick={() => dispatch(setFilteredSalesmanId(salesman.id))}>
+                <li key={salesman.id} onClick={handleSelectSalesman(salesman)}>{salesman.id}
                     {salesman.name}
                     {salesman.subordinates && tree(salesman.subordinates)}
                 </li>

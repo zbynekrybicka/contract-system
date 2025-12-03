@@ -9,10 +9,10 @@ final class GetContactTest extends ApiTestCase {
     /**
      * @dataProvider dataGetContact
      */
-    public function testGetContact(): void
+    public function testGetContact($id): void
     {
         // HTTP Request
-        self::$client->request("GET", "/contact", [], [], [
+        self::$client->request("GET", "/contact?id=" . $id, [], [], [
             'CONTENT-TYPE' => 'application/json',
         ]);
         // Response control
@@ -22,7 +22,7 @@ final class GetContactTest extends ApiTestCase {
     public static function dataGetContact(): array 
     {
         return [
-            []
+            [1], [3]
         ];
     }
 
