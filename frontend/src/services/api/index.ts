@@ -6,7 +6,7 @@ import { logout } from '../../store/authSlice'
 export const api = createApi({
 
   baseQuery: async (args, api, extra) => {
-    const result = await fetchBaseQuery({
+    const request = await fetchBaseQuery({
       baseUrl: API_URL,
       prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
@@ -14,12 +14,18 @@ export const api = createApi({
         headers.set('Content-Type', 'application/json');
         return headers;
       },
-    })(args, api, extra)
-    // console.log(result)
-    if (result.error?.status === 401) {
-      api.dispatch(logout())
+    })
+    // console.log(args, api, extra)
+    if (args !== null) {
+      const result = request(args, api, extra)
+      // console.log(result)
+      if (result.error?.status === 401) {
+        api.dispatch(logout())
+      }
+      return result
+    } else {
+      return { data: null }
     }
-    return result
   },
   tagTypes: [ "Contacts", "Contact", "Contracts" ],
   endpoints: () => ({}),

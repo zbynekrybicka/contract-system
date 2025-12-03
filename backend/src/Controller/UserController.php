@@ -297,4 +297,40 @@ class UserController extends AbstractController
         return $this->json($token);
     }
 
+
+    private function buildSalesmanTree($contact): array
+    {
+        $subordinates = [];
+        foreach ($contact->getSubordinates() as $subordinate) {
+            $subordinates[] = [
+                'id' => $subordinate->getId(),
+                'name' => $subordinate->getFullName(),
+                'isSalesman' => $subordinate->isSalesman(),
+                'subordinates' => $this->buildSalesmanTree($subordinate)
+            ];
+        }
+        return $subordinates;
+    }
+
+
+    #[Route('/user/salesman-tree', name: 'getSalesmanTree', methods: ['GET'])]
+    public function getSalesmanTree(ContactRepository $contactRepository): JsonResponse
+    {
+        /**
+         * get current user
+         */
+        $user = $this->userRepository->findByToken();
+        $superior = $user->getContact();
+
+        $salesmanTree = $this->buildSalesmanTree($superior);
+        return $this->json([
+            [
+                'id' => $superior->getId(),
+                'name' => $superior->getFullName(),
+                'isSalesman' => $superior->isSalesman(),
+                'subordinates' => $salesmanTree
+            ]
+        ]);
+    }
+    
 }

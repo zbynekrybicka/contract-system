@@ -13,6 +13,12 @@ export type UserStatistics = {
   meetings: number
 }
 
+export type Salesman = {
+  id: number
+  name: string
+  subordinates: Salesman[]
+}
+
 export type PostLoginResult = {
   data?: string;
 }
@@ -21,8 +27,18 @@ export const userApi = api.injectEndpoints({
   endpoints: (b) => ({
 
 
-    getUserStatistics: b.query<UserStatistics, null>({
-      query: () => ({ method: 'GET', url: `/user/statistics` })
+    getUserStatistics: b.query<UserStatistics, number | null>({
+      query: (salesmanId: number | null = null) => {
+        if (salesmanId !== null) {
+          return { method: 'GET', url: `/user/statistics`, params: { salesmanId } }
+        } else {
+          return null
+        }
+      }
+    }),
+
+    getSalesmanTree: b.query<Salesman[], null>({
+      query: () => ({ method: 'GET', url: `/user/salesman-tree` })
     }),
 
     postLogin: b.mutation<string, LoginFormData>({
@@ -44,4 +60,4 @@ export const userApi = api.injectEndpoints({
 
   }),
 });
-export const { useGetUserStatisticsQuery, usePostLoginMutation, usePostUserMutation, usePutUserNewPasswordMutation } = userApi;
+export const { useGetUserStatisticsQuery, usePostLoginMutation, usePostUserMutation, usePutUserNewPasswordMutation, useGetSalesmanTreeQuery } = userApi;

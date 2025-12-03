@@ -1,8 +1,11 @@
+import { useAppSelector } from "../hooks";
 import { useGetUserStatisticsQuery } from "../services/api/userApi";
+import { getFilteredSalesmanId } from "../store/salesmanFilterSlice";
 
 export default function Statistics()
 {
-      const { data: statistics, isLoading: isStatisticsLoading } = useGetUserStatisticsQuery(null);
+    const salesmanId = useAppSelector(getFilteredSalesmanId);    
+    const { data: statistics, isLoading: isStatisticsLoading } = useGetUserStatisticsQuery(salesmanId)
     
 
     return <>{isStatisticsLoading ? <img src={"/src/assets/tube-spinner.svg"} height="100px" /> : <div className="white-box">

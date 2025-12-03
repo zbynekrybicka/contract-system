@@ -77,6 +77,13 @@ class Contact
 
 
     /**
+     * Subordinates
+     */
+    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: "superior")]
+    private Collection $subordinates;
+
+
+    /**
      * Realized Calls
      */
     #[ORM\OneToMany(targetEntity: Call::class, mappedBy: "receiver")]
@@ -89,6 +96,12 @@ class Contact
     #[ORM\ManyToMany(targetEntity: Meeting::class, mappedBy: 'participants')]
     private Collection $meetings;
 
+
+    /**
+     * User
+     */
+    #[ORM\OneToOne(targetEntity: User::class, mappedBy: "contact")]
+    private ?User $user = null;
 
     /**
      * @param ?Contact superior
@@ -176,6 +189,17 @@ class Contact
 
 
     /**
+     * Get full name
+     * 
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return trim($this->firstName . ' ' . $this->middleName . ' ' . $this->lastName);
+    }
+
+
+    /**
      * Email
      * 
      * @return string
@@ -194,6 +218,45 @@ class Contact
     public function getSuperior(): ?Contact
     {
         return $this->superior;
+    }
+
+
+    /**
+     * Subordinates
+     * 
+     * @return Collection<Contact>
+     */
+    public function getSubordinates(): Collection
+    {
+        return $this->subordinates;
+    }
+
+
+    /**
+     * Salesmen
+     * 
+     * @return Collection<Contact>
+     */
+    public function getSalesmen(): Collection
+    {
+
+        $salesmen = array_filter(
+            $this->subordinates->toArray(),
+            fn(Contact $contact) => $contact->isSalesman()
+        );
+        return new \Doctrine\Common\Collections\ArrayCollection($salesmen);
+    }
+
+
+
+    /**
+     * Is Salesman
+     * 
+     * @return bool
+     */
+    public function isSalesman(): bool
+    {
+        return $this->user !== null;
     }
 
 
